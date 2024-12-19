@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: swapspace-backend
+    env: node
+    buildCommand: |
+      npm install
+      cd frontend && npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://swapspacef.onrender.com/
