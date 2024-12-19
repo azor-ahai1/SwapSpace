@@ -3,6 +3,10 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 
 import path from "path";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 const app = express()
@@ -43,11 +47,13 @@ app.use("/api/v1/orders", orderRouter)
 
 //---------------------------------------------------------------------------------
 
-const __dirname1 = path.resolve();
+// const __dirname1 = path.resolve();
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname1, "client", "frontend", "dist"))); 
+    const frontendDistPath = path.resolve(__dirname, '../frontend/dist');
+    app.use(express.static(frontendDistPath));
+    // app.use(express.static(path.join(__dirname, "client", "frontend", "dist"))); 
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname1, "client", "frontend", "dist", "index.html")); 
+        res.sendFile(path.join(frontendDistPath, "index.html")); 
     });
 }
 
