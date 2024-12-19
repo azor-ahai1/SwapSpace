@@ -1,27 +1,26 @@
-import * as dotenv from "dotenv"
+import dotenv from "dotenv"
+import connectDB from "./db/index.js";
+import { app } from "./app.js";
+
+// --------------------------------
 import path from "path"
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Add more robust dotenv configuration
 dotenv.config({
-    path: path.resolve(__dirname, '../.env')
-});
+    path: path.resolve(process.cwd(), '.env')
+})
 
-// Log environment variables for debugging
-console.log('Environment Variables:');
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
-console.log('PORT:', process.env.PORT);
+// -------------------------------
+
+// dotenv.config({
+//     path: "./.env"
+// })
 
 connectDB().then(
     () => {
-        const port = process.env.PORT || 8000;
-        app.listen(port, () =>{
-            console.log(`Server is running on port ${port}`);
+        app.listen(process.env.PORT || 8000, () =>{
+            console.log(`Server is running on port ${process.env.PORT || 8000}`);
         })
     }
 ).catch((err) => {
-    console.error("MONGO DB Connection failed in src/index.js ", err)
+    console.log("MONGO DB Connection failed in src/index.js ", err)
 })
