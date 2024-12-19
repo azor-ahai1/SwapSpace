@@ -1,17 +1,150 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from '../axios';
 import { 
   FaTag, 
   FaMoneyBillWave, 
   FaClipboardList, 
   FaBoxOpen,
-  FaUser
+  FaUser,
+  FaEdit,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaEnvelope, 
+  FaPhone, 
+  FaInstagram
 } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { selectUser } from '../store/authSlice';
+import { useSelector, } from 'react-redux';
+
+const ProductOrders = ({ productId }) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const fetchProductOrders = async () => {
+          try {
+              setLoading(true);
+              // console.log('Product Id:', productId);
+              const response = await axios.get(`/orders/product-orders/${productId}`);
+              console.log('Full response:', response);
+              setOrders(response.data.data);
+              console.log(orders);
+          } catch (err) {
+              setError(err.response?.data?.message || 'Failed to fetch orders');
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchProductOrders();
+  }, [productId]);
+
+  const handleAcceptOrder = async (orderId) => {
+      try {
+          await axios.post('/orders/accept-order', { orderId });
+          setOrders(prev => prev.filter(order => order._id !== orderId));
+      } catch (err) {
+          // Handle error
+      }
+  };
+
+  const handleRejectOrder = async (orderId) => {
+      try {
+          await axios.post('/orders/reject-order', { orderId });
+          setOrders(prev => prev.filter(order => order._id !== orderId));
+      } catch (err) {
+          // Handle error
+      }
+  };
+
+  if (loading) return <div>Loading orders...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
+  if (orders.length === 0) return <div>No pending orders</div>;
+
+  return (
+      <div className="space-y-4 mt-8">
+          <h3 className="text-2xl font-bold text-light-blue mb-4">
+              Pending Orders ({orders.length})
+          </h3>
+
+          {orders.map((order) => (
+              <div 
+                  key={order._id} 
+                  className="bg-dark-primary/80 rounded-lg p-4 border border-slate-gray"
+              >
+                  {/* Order details rendering */}
+                  {/* <div className="flex items-center space-x-4 mb-4">
+                      <img 
+                          src={order.productDetails?.productImages?.[0] || ""} 
+                          alt="Product" 
+                          className="w-16 h-16 object-cover rounded-lg"
+                      />
+                      <div>
+                          <h4 className="text-white font-semibold">
+                              {order.productDetails?.name || 'Unknown Product'}
+                          </h4>
+                          <p className="text-gray-400">
+                              Quantity: {order.quantity || 0} | Price: ₹{order.price || 0}
+                          </p>
+                      </div>
+                  </div> */}
+
+                  {/* Buyer details */}
+                  <div className="bg-dark-primary/50 rounded-lg p-4 space-y-2">
+                      <h5 className="text-light-blue font-semibold">Buyer Details</h5>
+                      <div className="flex items-center space-x-2">
+                          <FaUser className="text-light-blue" />
+                          <Link 
+                              to={`/users/${order.buyerDetails?._id}`} 
+                              className="text-white hover:text-light-blue hover:underline"
+                          >
+                              {order.buyerDetails?.name || 'Unknown Buyer'}
+                          </Link>
+                      </div>
+                  </div>
+
+                  <div className="flex space-x-4 mt-4">
+                      <button
+                          onClick={() => handleAcceptOrder(order._id)}
+                          className="
+                              w-1/2 py-2 
+                              bg-green-600 text-white 
+                              rounded-lg 
+                              flex items-center justify-center 
+                              space-x-2 
+                              hover:bg-green-700
+                          "
+                      >
+                          <FaCheckCircle />
+                          <span>Accept Order</span>
+                      </button>
+                      <button
+                          onClick={() => handleRejectOrder(order._id)}
+                          className="
+                              w-1/2 py-2 
+                              bg-red-600 text-white 
+                              rounded-lg 
+                              flex items-center justify-center 
+                              space-x-2 
+                              hover:bg-red-700
+                          "
+                      >
+                          <FaTimesCircle />
+                          <span>Reject Order</span>
+                      </button>
+                  </div>
+              </div>
+          ))}
+      </div>
+  );
+};
+
 
 const ViewProduct = () => {
   const [product, setProduct] = useState(null);
@@ -20,6 +153,9 @@ const ViewProduct = () => {
   const [error, setError] = useState(null);
   const { productId } = useParams();
   const navigate = useNavigate()
+
+  const currentUser = useSelector(selectUser);
+  const isProductOwner = currentUser?._id === product?.owner?._id;
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -168,9 +304,27 @@ const ViewProduct = () => {
 
         {/* Product Details */}
         <div className="space-y-6">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-light-blue mb-4">
             {product.name}
           </h1>
+          
+          {/* Edit Product Button - Conditional Rendering */}
+          {isProductOwner && (
+            <Link
+              to={`/products/edit/${product._id}`}
+              className="
+                bg-light-blue text-dark-primary 
+                px-4 py-2 rounded-lg 
+                flex items-center space-x-2
+                hover:bg-opacity-90
+              "
+            >
+              <FaEdit />
+              <span>Edit Product</span>
+            </Link>
+          )}
+        </div>
 
           <div className="flex items-center space-x-4 mb-4">
             <div className="flex items-center space-x-2">
@@ -254,6 +408,11 @@ const ViewProduct = () => {
           )}
           </div>
         </div>
+        {isProductOwner && (
+          <div className="md:col-span-2">
+            <ProductOrders productId={productId} />
+          </div>
+        )}
       </div>
     </div>
   );

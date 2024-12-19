@@ -1,8 +1,10 @@
+import mongoose from 'mongoose'; 
 import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+
 
 const placeOrder = asyncHandler(async (req, res) => {
     const { buyer, seller, product, quantity, price } = req.body;
@@ -72,6 +74,160 @@ const cancelOrder = asyncHandler(async (req, res) => {
     
 });
 
+const getProductOrders = asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+    // console.log(productId);
+    const product = await Product.findById(productId);
+    if (!product) {
+        return res.status(404).json(
+            new ApiError(404, "Product not found")
+        );
+    }
+
+    // console.log(product);
+
+    const orders = await Order.aggregate([
+        {
+            $match: { 
+                product: new mongoose.Types.ObjectId(productId),
+                orderStatus: "Pending" 
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "buyer",
+                foreignField: "_id",
+                as: "buyerDetails"
+            }
+        },
+        {
+            $unwind: "$buyerDetails"
+        },
+        {
+            $project: {
+                _id: 1,
+                orderStatus: 1,
+                buyer: 1,
+                buyerDetails: 1,
+                product: 1
+            }
+        }
+        
+    ]) 
 
 
-export { placeOrder, cancelOrder}
+    
+    return res.status(200).json(
+        new ApiResponse(200, orders, "Product orders retrieved successfully")
+    );
+
+});
+
+
+const acceptOrder = asyncHandler(async (req, res) => {
+    // const { orderId } = req.params;
+    const { orderId } = req.body;
+    const order = await Order.findById(orderId);
+    if (!order) {
+        return res.status(404).json(
+            new ApiError(404, "Order not found")
+        );
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+        orderId,
+        {
+            $set: { 
+                orderStatus: "Accepted" 
+            },
+        },
+        {
+            new: true
+        }
+    )
+
+    if (!updatedOrder) {
+        return res.status(404).json(
+            new ApiError(400, "Order not updated")
+        );
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+        order.product,
+        {
+            $set: { 
+                productStatus: "Sold" 
+            },
+        },
+        {
+            new: true
+        }
+    );
+
+    if (!updatedProduct) {
+        return res.status(404).json(
+            new ApiError(400, "Product not updated")
+        );
+    }
+   
+    return res.status(200).json(
+        new ApiResponse(200, updatedOrder, "Order accepted successfully")
+    );
+});
+
+
+const rejectOrder = asyncHandler(async (req, res) => {
+    // const { orderId } = req.params;
+    const { orderId } = req.body;
+    const order = await Order.findById(orderId);
+    if (!order) {
+        return res.status(404).json(
+            new ApiError(404, "Order not found")
+        );
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+        orderId,
+        {
+            $set: { 
+                orderStatus: "Rejected" 
+            },
+        },
+        {
+            new: true
+        }
+    )
+
+    if (!updatedOrder) {
+        return res.status(404).json(
+            new ApiError(400, "Order not updated")
+        );
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+        order.product,
+        {
+            $set: { 
+                productStatus: "Available" 
+            },
+        },
+        {
+            new: true
+        }
+    );
+
+    if (!updatedProduct) {
+        return res.status(404).json(
+            new ApiError(400, "Product not updated")
+        );
+    }
+   
+    return res.status(200).json(
+        new ApiResponse(200, updatedOrder, "Order accepted successfully")
+    );
+});
+
+
+
+export { placeOrder, cancelOrder, acceptOrder, getProductOrders, rejectOrder}

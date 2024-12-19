@@ -8,7 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 // import {Protected} from './components/index.js'
 
-import {Home, Login, Signup, AddProduct, ViewProduct, AllProducts, UserProfile, EditProfile} from './pages/index.js'
+import {Home, Login, Signup, AddProduct, ViewProduct, AllProducts, UserProfile, EditProfile, EditProduct} from './pages/index.js'
 
 const router = createBrowserRouter([
   {
@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         {
           path: "/products/:productId",
           element: <ViewProduct />
+        },
+        {
+          path: "/products/edit/:productId",
+          element: <EditProduct />
         },
         {
           path: "/products/allproducts",

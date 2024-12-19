@@ -9,6 +9,7 @@ import ViewProduct from "./ViewProduct";
 import AllProducts from "./AllProducts"; 
 import UserProfile from "./UserProfile";
 import EditProfile from "./EditProfile";
+import EditProduct from "./EditProduct";
 
 
 
@@ -23,6 +24,7 @@ export {
     AllProducts,
     UserProfile,
     EditProfile,
+    EditProduct,
     
 
 }

@@ -72,6 +72,81 @@ const addProduct = asyncHandler(async (req, res) => {
     )
 })
 
+
+const updateProduct = asyncHandler(async (req, res) => {
+    const { name, price, description, category, quantity, productImages } = req.body;
+
+    const productId = req.params.productId;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+        throw new ApiError(404, "Product not found");
+    }
+
+    if (product.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not the owner of this product");
+    }
+
+    if([name, description].some(
+        (field) => field?.trim() === "" )
+    ){
+        throw new ApiError(400, "All fields are required");
+    }
+    if ((price <= 0) || (quantity <= 0)) {
+        throw new ApiError(400, "Price and quantity must be greater than 0");
+    }
+
+    const categoryDoc = await Category.findOne({name:category});
+    if (!categoryDoc) {
+        throw new ApiError(404, "Invalid category");
+    }
+
+    // const product = new Product({ name, price, description, category, quantity });
+
+    let uploadedImages = [];
+    try {
+        uploadedImages = JSON.parse(productImages || '[]');
+    } catch (parseError) {
+        throw new ApiError(400, "Invalid existing images format");
+    }
+
+    const productImagePaths = req.files?.images;
+    // const uploadedImages = product.productImages || [];
+    if (productImagePaths && productImagePaths.length !== 0) {
+        for (const file of productImagePaths) {
+            const localFilePath = file.path;
+            const uploadedImage = await uploadProductImageOnCloudinary(localFilePath);
+            if (!uploadedImage) {
+                throw new ApiError(400, "Failed to upload one or more product images");
+            }
+        
+            uploadedImages.push(uploadedImage.url); 
+        }
+    }
+    
+    const updatedProduct = await Product.findByIdAndUpdate(
+        productId,
+        { 
+            $set:{
+                name,
+                price,
+                description,
+                quantity,
+                productImages: uploadedImages,
+                category: categoryDoc._id,
+            } 
+        },
+        { new: true }
+    ).populate('category')
+     .populate('owner', 'name email');
+
+    return res.status(201).json(
+        new ApiResponse(200, updatedProduct, "Product Created Successfully")
+    )
+})
+
+
+
 const getAllProductFromSameCategory = asyncHandler(async (req, res) => {
     const category = req.params.category;
     const products = await Product.aggregate(
@@ -112,4 +187,4 @@ const getProductById = asyncHandler(async (req, res) => {
 });
   
 
-export { addProduct, getAllProductFromSameCategory, getProductById, getAllProducts };
+export { addProduct, getAllProductFromSameCategory, getProductById, getAllProducts, updateProduct};

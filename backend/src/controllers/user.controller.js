@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import { User } from "../models/user.model.js";
-// import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadProfileImageOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -268,37 +268,52 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 })
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    const {fullName, email, phoneNumber} = req.body
+    
+    const {name, email, phoneNumber, instaID} = req.body
 
-    if(!fullName || !email){
+    if(!name || !email){
         throw new ApiError(400, "Name and Email are required")
     }
-    const user = User.findByIdAndUpdate(
+
+    const profileImageLocalPath = req.file?.path;
+    // console.log("profileImageLocalPath: ",profileImageLocalPath);
+    let profileImageURL="";
+    if(profileImageLocalPath){
+        const profileImage = await uploadProfileImageOnCloudinary(profileImageLocalPath);
+        if(!profileImage){
+            throw new ApiError(400, "Avatar Upload Failed")
+        }
+        else{
+            profileImageURL = profileImage.url
+        }
+    }
+    
+    const updatedUser = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set: {
-                // fullName: fullName,
-                fullName,
-                email: email   
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                phoneNumber: phoneNumber,
+                instaID: instaID,
+                profileImage: profileImageURL,
             }
         },
         {
             new: true,
+            runValidators: true 
         }
-    ).select("-password")
+    ).select("-password -refreshToken")
     
     return res
     .status(200)
     .json(new ApiResponse(
         200,
-        user,
+        updatedUser.toObject(),  // toObject is neccessary otherwise getting the  TypeError: Converting circular structure to JSON 
         "Account details updated successfully"
     ))
 })
 
-// const getUserOrderHistory = asyncHandler(async(req, res) => {
-    
-// }) 
 
 const getUserOrderHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
@@ -599,7 +614,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
                 totalBuyerOrders: 1,
                 totalSellerOrders: 1,
                 totalRevenue: 1,
-                createdAt: 1
+                createdAt: 1,
+                profileImage: 1,
             }
         }
     ]);

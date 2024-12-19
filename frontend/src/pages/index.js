@@ -6,6 +6,7 @@ import ViewProduct from "./ViewProduct";
 import AllProducts from "./AllProducts";
 import UserProfile from "./UserProfile";
 import EditProfile from "./EditProfile";
+import { EditProduct } from "../components";
 
 
 export { 
@@ -16,6 +17,7 @@ export {
     ViewProduct,
     AllProducts,
     UserProfile,
-    EditProfile
+    EditProfile,
+    EditProduct
 }
 

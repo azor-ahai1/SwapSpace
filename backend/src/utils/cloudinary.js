@@ -26,6 +26,26 @@ const uploadProductImageOnCloudinary = async (localFilePath) => {
     }
 }
 
+const uploadProfileImageOnCloudinary = async (localFilePath) => {
+    try {
+        if(!localFilePath){
+            console.log('No file path provided');
+            return null
+        }
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto",
+            folder: "swapspace/profileImage",
+        })
+        console.log("File is uploaded on Cloudinary ", response.url);
+        // fs.unlinkSync(localFilePath)
+        return response;
+    }
+    catch (error) {
+        fs.unlinkSync(localFilePath)
+        return null;
+    }
+}
+
 const uploadProductVideoOnCloudinary = async (localFilePath) => {
     try {
         if(!localFilePath){
@@ -47,5 +67,6 @@ const uploadProductVideoOnCloudinary = async (localFilePath) => {
 
 export {
     uploadProductImageOnCloudinary, 
-    uploadProductVideoOnCloudinary
+    uploadProductVideoOnCloudinary,
+    uploadProfileImageOnCloudinary
 }

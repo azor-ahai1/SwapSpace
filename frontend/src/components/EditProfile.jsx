@@ -18,7 +18,7 @@ const EditProfile = () => {
   const dispatch = useDispatch();
   const currentUser = useSelector(selectUser);
   const [loading, setLoading] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImageLocalPath, setProfileImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
   const {
@@ -55,21 +55,20 @@ const EditProfile = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // Create FormData for file upload
       const formData = new FormData();
-      
-      // Append text data
-      Object.keys(data).forEach(key => {
-        if (data[key]) formData.append(key, data[key]);
-      });
 
-      // Append profile image if selected
-      if (profileImage) {
-        formData.append('profileImage', profileImage);
+      formData.append('name', data.name);
+      formData.append('email', data.email);
+
+      if (data.phoneNumber) formData.append('phoneNumber', data.phoneNumber);
+      if (data.instaID) formData.append('instaID', data.instaID);
+
+      if (profileImageLocalPath) {
+        console.log('Profile Image File:', profileImageLocalPath);
+        formData.append('profileImage', profileImageLocalPath);
       }
 
-      // Send update request
-      const response = await axios.patch('/users/update-account', formData, {
+      const response = await axios.patch('/users/update-profile', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -80,12 +79,10 @@ const EditProfile = () => {
         user: response.data.data,
         accessToken: currentUser.accessToken // Maintain existing token
       }));
-
-      // Navigate back to profile or show success message
+      console.log("User Data updated successfully")
       navigate(`/users/${currentUser._id}`);
     } catch (error) {
       console.error('Profile update error:', error);
-      // Handle error (show toast, error message)
     } finally {
       setLoading(false);
     }

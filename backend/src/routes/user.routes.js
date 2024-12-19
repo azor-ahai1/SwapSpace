@@ -17,7 +17,12 @@ router.route("/change-password").post(verifyJWT, changeCurrentPassword)
 
 router.route("/current-user").get(verifyJWT, getCurrentUser)
 
-router.route("/update-account").patch(verifyJWT, updateAccountDetails)
+router.route("/update-profile").patch(
+    verifyJWT,
+    upload.single("profileImage"),
+    updateAccountDetails
+)
+
 
 router.route("/user-order-history").get(verifyJWT, getUserOrderHistory)
 

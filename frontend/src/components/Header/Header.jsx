@@ -39,11 +39,11 @@ const Header = () => {
   const menuItems = [
     { to: '/', icon: <FaHome />, label: 'Home' },
     ...(userAuth ? [{
-      to: '/dashboard', 
+      to: `/users/${user._id}`, 
       icon: <FaTachometerAlt />, 
       label: 'Dashboard'
     }] : []),
-    { to: '/products', icon: <FaClipboardList />, label: 'Products' },
+    { to: '/products/allproducts', icon: <FaClipboardList />, label: 'Products' },
     { to: '/contact', icon: <FaUser />, label: 'Contact' },
   ];
 
