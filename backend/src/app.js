@@ -60,10 +60,10 @@ app.use("/api/v1/orders", orderRouter)
 //         res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 //     });
 // }
-app.use(express.static('/opt/render/project/src/frontend/dist'));
+app.use(express.static('/opt/render/frontend/dist'));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join('/opt/render/project/src/frontend/dist', 'index.html'));
+    res.sendFile(path.join('/opt/render/frontend/dist', 'index.html'));
 });
 
 //---------------------------------------------------------------------------------
