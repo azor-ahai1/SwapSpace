@@ -60,10 +60,16 @@ app.use("/api/v1/orders", orderRouter)
 //         res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 //     });
 // }
-app.use(express.static('/opt/render/frontend/dist'));
+// app.use(express.static('/opt/render/frontend/dist'));
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join('/opt/render/frontend/dist', 'index.html'));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join('/opt/render/frontend/dist', 'index.html'));
+// });
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Make sure this is set
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
 });
 
 //---------------------------------------------------------------------------------
