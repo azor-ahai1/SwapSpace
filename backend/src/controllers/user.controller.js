@@ -6,89 +6,25 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
-// const generateAccessAndRefreshTokens = async(userId) => {
-//     try{
-//         const user = await User.findById(userId);
-//         if(!user) {
-//             throw new ApiError('User not found while generating tokens', 404);
-//         }
-//         const accessToken = user.generateAccessToken()
-//         const refreshToken = user.generateRefreshToken()
-        
-//         user.refreshToken = refreshToken
-//         await user.save({validateBeforeSave : false})
-
-//         return {accessToken, refreshToken}
-//     }
-//     catch(error){
-//         throw new ApiError(500, "Something went wrong while generating Tokens during Login");
-//     }
-// }
 const generateAccessAndRefreshTokens = async(userId) => {
-    try {
-        console.log('Generating Tokens for User ID:', userId);
-
-        // Validate userId
-        if (!userId) {
-            console.error('No User ID provided');
-            throw new ApiError(400, 'User ID is required');
-        }
-
-        // Detailed user lookup
+    try{
         const user = await User.findById(userId);
+        if(!user) {
+            throw new ApiError('User not found while generating tokens', 404);
+        }
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
         
-        // Comprehensive user validation
-        if (!user) {
-            console.error('User not found for ID:', userId);
-            throw new ApiError(404, 'User not found while generating tokens');
-        }
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave : false})
 
-        // Detailed token generation with error handling
-        let accessToken, refreshToken;
-        try {
-            accessToken = user.generateAccessToken();
-            refreshToken = user.generateRefreshToken();
-
-            console.log('Tokens generated successfully', {
-                accessTokenExists: !!accessToken,
-                refreshTokenExists: !!refreshToken
-            });
-        } catch (tokenError) {
-            console.error('Token Generation Error:', {
-                message: tokenError.message,
-                stack: tokenError.stack
-            });
-            throw new ApiError(500, 'Failed to generate tokens');
-        }
-
-        // Save refresh token
-        try {
-            user.refreshToken = refreshToken;
-            await user.save({ validateBeforeSave: false });
-            
-            console.log('Refresh token saved successfully');
-        } catch (saveError) {
-            console.error('Failed to save refresh token:', {
-                message: saveError.message,
-                stack: saveError.stack
-            });
-            throw new ApiError(500, 'Failed to save refresh token');
-        }
-
-        return { accessToken, refreshToken };
-    } catch (error) {
-        console.error('Complete Token Generation Error:', {
-            message: error.message,
-            stack: error.stack,
-            name: error.name
-        });
-
-        throw new ApiError(
-            500, 
-            `Something went wrong while generating Tokens: ${error.message}`
-        );
+        return {accessToken, refreshToken}
     }
-};
+    catch(error){
+        throw new ApiError(500, "Something went wrong while generating Tokens during Login");
+    }
+}
+
 
 const registerUser = asyncHandler(async (req, res) => {
     const {name, email, password} = req.body
