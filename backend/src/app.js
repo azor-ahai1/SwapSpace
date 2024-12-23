@@ -33,6 +33,29 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
+// app.js
+app.use((err, req, res, next) => {
+    console.error('Global Error Middleware:', {
+      timestamp: new Date().toISOString(),
+      method: req.method,
+      path: req.path,
+      body: req.body,
+      query: req.query,
+      error: {
+        message: err.message,
+        stack: err.stack,
+        name: err.name,
+        code: err.code
+      }
+    });
+  
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Internal Server Error',
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+  });
+
 // ----------------------------------------------------------------------------
 
 import userRouter from "./routes/user.routes.js"
