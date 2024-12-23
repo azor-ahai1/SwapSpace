@@ -87,9 +87,9 @@ app.use("/api/v1/orders", orderRouter)
 // }
 // app.use(express.static('/opt/render/frontend/dist'));
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join('/opt/render/frontend/dist', 'index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'frontend', 'dist', 'index.html'));
+});
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Make sure this is set
