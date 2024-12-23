@@ -59,9 +59,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={false} persistor={persistor}>
-        <HashRouter>
+        {/* <HashRouter> */}
           <RouterProvider router={router} />
-        </HashRouter>
+        {/* </HashRouter> */}
       </PersistGate>
     </Provider>
   </StrictMode>,
