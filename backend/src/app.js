@@ -91,11 +91,13 @@ app.use("/api/v1/orders", orderRouter)
 //     res.sendFile(path.join(process.cwd(), 'frontend', 'dist', 'index.html'));
 // });
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Make sure this is set
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-});
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Make sure this is set
+//     res.header('Access-Control-Allow-Credentials', 'true');
+//     next();
+// });
+
+app.options('*', cors()); 
 
 //---------------------------------------------------------------------------------
 
