@@ -13,14 +13,27 @@ const app = express()
 
 // --------------------------------------------------------------------------
 
+//MY CHANGES --- UTKARSH
 app.use(cors({
-    // origin: DeployTry25'http://localhost:5173', 
-    origin: process.env.CORS_ORIGIN, 
-    // origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
-    credentials: true
-  }));
+  origin: (origin, callback) => {
+      callback(null, true); // Allow all origins dynamically
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+  credentials: true
+}));
+
+
+
+
+// app.use(cors({
+//     // origin: DeployTry25'http://localhost:5173', 
+//     origin: process.env.CORS_ORIGIN, 
+//     // origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+//     credentials: true
+//   }));
 
 
 app.use(express.json({
