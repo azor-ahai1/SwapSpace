@@ -14,8 +14,11 @@ const app = express()
 // --------------------------------------------------------------------------
 
 app.use(cors({
-    // origin: DeployTry25'http://localhost:5173', 
-    origin: process.env.CORS_ORIGIN, 
+    // origin: 'http://localhost:5173', 
+    // origin: process.env.CORS_ORIGIN, 
+    origin: (origin, callback) => {
+      callback(null, true); // Allow all origins dynamically
+    },
     // origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
