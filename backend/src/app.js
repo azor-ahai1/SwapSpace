@@ -119,76 +119,42 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+// Initialize express app
 const app = express();
 
-// Middleware configuration
-import cors from "cors";
-
-// Configure CORS
+// Middleware Configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        "https://swap-space-hdmz.vercel.app", // Frontend origin
-        "https://swap-space-k1vm.vercel.app", // Backend origin (if needed)
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Allow if origin is in the list
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Origin",
-      "X-Requested-With",
-      "Accept",
-      "x-client-key",
-      "x-client-token",
-      "x-client-secret",
-      "Authorization",
-    ],
+    origin: process.env.CORS_ORIGIN, // Allow requests only from the specified origin
     credentials: true, // Allow credentials (cookies, etc.)
   })
 );
 
 app.use(
   express.json({
-    limit: "16kb",
+    limit: "20kb", // Set JSON payload size limit
   })
 );
 
 app.use(
   express.urlencoded({
-    extended: true,
-    limit: "16kb",
+    extended: true, // Allow nested objects
+    limit: "16kb", // Set URL-encoded payload size limit
   })
 );
 
+// Serve static files from the "public" directory
+app.use(express.static("public"));
+
+// Parse cookies
 app.use(cookieParser());
 
-// Global Error Middleware
-app.use((err, req, res, next) => {
-  console.error("Global Error Middleware:", {
-    timestamp: new Date().toISOString(),
-    method: req.method,
-    path: req.path,
-    body: req.body,
-    query: req.query,
-    error: {
-      message: err.message,
-      stack: err.stack,
-      name: err.name,
-      code: err.code,
-    },
-  });
-
-  res.status(500).json({
-    success: false,
-    message: err.message || "Internal Server Error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
-  });
+// Debugging: Log request origins
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin); // Log origin for debugging
+  res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN); // Dynamically set the CORS origin
+  res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+  next();
 });
 
 // Routes
@@ -202,7 +168,7 @@ app.use("/api/v1/products", productRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/orders", orderRouter);
 
-// Catch-all for undefined API routes
+// Handle undefined API routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -211,3 +177,100 @@ app.use((req, res) => {
 });
 
 export { app };
+
+// import express from "express";
+// import cors from "cors";
+// import cookieParser from "cookie-parser";
+
+// const app = express();
+
+// // Middleware configuration
+// import cors from "cors";
+
+// // Configure CORS
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       const allowedOrigins = [
+//         "https://swap-space-hdmz.vercel.app", // Frontend origin
+//         "https://swap-space-k1vm.vercel.app", // Backend origin (if needed)
+//       ];
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true); // Allow if origin is in the list
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Origin",
+//       "X-Requested-With",
+//       "Accept",
+//       "x-client-key",
+//       "x-client-token",
+//       "x-client-secret",
+//       "Authorization",
+//     ],
+//     credentials: true, // Allow credentials (cookies, etc.)
+//   })
+// );
+
+// app.use(
+//   express.json({
+//     limit: "16kb",
+//   })
+// );
+
+// app.use(
+//   express.urlencoded({
+//     extended: true,
+//     limit: "16kb",
+//   })
+// );
+
+// app.use(cookieParser());
+
+// // Global Error Middleware
+// app.use((err, req, res, next) => {
+//   console.error("Global Error Middleware:", {
+//     timestamp: new Date().toISOString(),
+//     method: req.method,
+//     path: req.path,
+//     body: req.body,
+//     query: req.query,
+//     error: {
+//       message: err.message,
+//       stack: err.stack,
+//       name: err.name,
+//       code: err.code,
+//     },
+//   });
+
+//   res.status(500).json({
+//     success: false,
+//     message: err.message || "Internal Server Error",
+//     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+//   });
+// });
+
+// // Routes
+// import userRouter from "./routes/user.routes.js";
+// import productRouter from "./routes/product.routes.js";
+// import categoryRouter from "./routes/category.routes.js";
+// import orderRouter from "./routes/order.routes.js";
+
+// app.use("/api/v1/users", userRouter);
+// app.use("/api/v1/products", productRouter);
+// app.use("/api/v1/categories", categoryRouter);
+// app.use("/api/v1/orders", orderRouter);
+
+// // Catch-all for undefined API routes
+// app.use((req, res) => {
+//   res.status(404).json({
+//     success: false,
+//     message: "API endpoint not found",
+//   });
+// });
+
+// export { app };
