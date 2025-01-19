@@ -124,7 +124,7 @@ const app = express();
 // Middleware configuration
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Allow frontend origin
+    origin: process.env.CORS_ORIGIN, // Allow frontend origin
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
