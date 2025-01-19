@@ -3,8 +3,8 @@ import store from './store/store';
 import { logout } from './store/authSlice';
 
 const instance = axios.create({
-  // baseURL: 'http://localhost:8000/api/v1',
-  baseURL: import.meta.env.VITE_API_BASE_URL ,
+  baseURL: 'http://localhost:8000/api/v1',
+  // baseURL: import.meta.env.VITE_API_BASE_URL ,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'

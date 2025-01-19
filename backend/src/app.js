@@ -16,7 +16,7 @@ const app = express()
 //MY CHANGES --- UTKARSH
 app.use(cors({
     // origin: 'http://localhost:5173', 
-    // origin: process.env.CORS_ORIGIN, 
+    origin: process.env.CORS_ORIGIN, 
     origin: (origin, callback) => {
       callback(null, true); // Allow all origins dynamically
     },
