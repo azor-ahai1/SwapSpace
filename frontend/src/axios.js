@@ -3,7 +3,7 @@ import store from './store/store';
 import { logout } from './store/authSlice';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/api/v1',
+  baseURL: 'https://swap-space-k1vm.vercel.app/api/v1',
   // baseURL: import.meta.env.VITE_API_BASE_URL ,
   withCredentials: true,
   headers: {
