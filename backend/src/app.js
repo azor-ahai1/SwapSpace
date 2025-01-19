@@ -122,9 +122,22 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 // Middleware configuration
+import cors from "cors";
+
+// Configure CORS
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN, // Allow frontend origin
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "https://swap-space-hdmz.vercel.app", // Frontend origin
+        "https://swap-space-k1vm.vercel.app", // Backend origin (if needed)
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Allow if origin is in the list
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
@@ -136,7 +149,7 @@ app.use(
       "x-client-secret",
       "Authorization",
     ],
-    credentials: true,
+    credentials: true, // Allow credentials (cookies, etc.)
   })
 );
 
