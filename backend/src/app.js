@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-// import path from "path";
+import path from "path";
 // import { fileURLToPath } from 'url';
 
 // // const __filename = fileURLToPath(import.meta.url);
@@ -38,14 +38,14 @@ app.use(express.json({
     limit: "20kb"
 }))
 
-// app.use(express.urlencoded({
-//     extended: true,
-//     limit: "16kb"
-// }))
+app.use(express.urlencoded({
+    extended: true,
+    limit: "16kb"
+}))
 
 // app.use(express.static("public"))
 
-// app.use(cookieParser())
+app.use(cookieParser())
 
 // app.js
 app.use((err, req, res, next) => {
@@ -68,6 +68,10 @@ app.use((err, req, res, next) => {
       message: err.message || 'Internal Server Error',
       ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
     });
+  });
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
   });
 
   // app.use((req, res, next) => {
