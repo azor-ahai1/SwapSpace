@@ -1,25 +1,32 @@
 import express from "express";
-import cors from "cors"
-import cookieParser from "cookie-parser"
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
-import path from "path";
+// import path from "path";
 // import { fileURLToPath } from 'url';
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
 
 
-const app = express()
+const app = express();
 
 // --------------------------------------------------------------------------
 
-//MY CHANGES --- UTKARSH
 app.use(cors({
     // origin: 'http://localhost:5173', 
-    // origin: process.env.CORS_ORIGIN, 
-    origin: (origin, callback) => {
-      callback(null, true); // Allow all origins dynamically
-    },
+    origin: process.env.CORS_ORIGIN, 
+    // origin: (origin, callback) => {
+    //   const allowedOrigins = [
+    //     "https://swap-space-hdmz.vercel.app", // Frontend origin
+    //     "https://swap-space-k1vm.vercel.app", // Backend origin (if needed)
+    //   ];
+    //   if (!origin || allowedOrigins.includes(origin)) {
+    //     callback(null, true); // Allow if origin is in the list
+    //   } else {
+    //     callback(new Error("Not allowed by CORS"));
+    //   }
+    // },
     // origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
@@ -28,7 +35,7 @@ app.use(cors({
 
 
 app.use(express.json({
-    limit: "16kb"
+    limit: "20kb"
 }))
 
 app.use(express.urlencoded({
@@ -36,7 +43,7 @@ app.use(express.urlencoded({
     limit: "16kb"
 }))
 
-app.use(express.static("public"))
+// app.use(express.static("public"))
 
 app.use(cookieParser())
 
@@ -53,7 +60,7 @@ app.use((err, req, res, next) => {
         stack: err.stack,
         name: err.name,
         code: err.code
-      }
+      },
     });
   
     res.status(500).json({
@@ -61,6 +68,13 @@ app.use((err, req, res, next) => {
       message: err.message || 'Internal Server Error',
       ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
     });
+  });
+
+  app.use((req, res, next) => {
+    console.log("Request Origin:", req.headers.origin); // Log origin for debugging
+    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN); // Dynamically set the CORS origin
+    res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+    next();
   });
 
 // ----------------------------------------------------------------------------
@@ -75,6 +89,13 @@ app.use("/api/v1/products", productRouter)
 app.use("/api/v1/categories", categoryRouter)
 app.use("/api/v1/orders", orderRouter)
 
+// Catch-all for undefined API routes
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "API endpoint not found",
+  });
+});
 //---------------------------------------------------------------------------------
 
 // const __dirname1 = path.resolve();
@@ -96,15 +117,15 @@ app.use("/api/v1/orders", orderRouter)
 //     res.sendFile(path.join(process.cwd(), 'frontend', 'dist', 'index.html'));
 // });
 
-app.use((req, res, next) => {
-  console.log('Request Origin:', req.headers.origin);  // Log origin for debugging
-  res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Set header dynamically
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log('Request Origin:', req.headers.origin);  // Log origin for debugging
+//   res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN); // Set header dynamically
+//   res.header('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
 
 // app.options('*', cors()); 
 
 //---------------------------------------------------------------------------------
 
-export {app}
+export {app};

@@ -39,7 +39,7 @@ const Header = () => {
   const menuItems = [
     { to: '/', icon: <FaHome />, label: 'Home' },
     ...(userAuth ? [{
-      to: `/users/${user._id}`, 
+      to: `/users/${user?._id}`, 
       icon: <FaTachometerAlt />, 
       label: 'Dashboard'
     }] : []),
