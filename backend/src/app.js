@@ -70,12 +70,12 @@ app.use((err, req, res, next) => {
     });
   });
 
-  app.use((req, res, next) => {
-    console.log("Request Origin:", req.headers.origin); // Log origin for debugging
-    res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN); // Dynamically set the CORS origin
-    res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
-    next();
-  });
+  // app.use((req, res, next) => {
+  //   console.log("Request Origin:", req.headers.origin); // Log origin for debugging
+  //   res.header("Access-Control-Allow-Origin", process.env.CORS_ORIGIN); // Dynamically set the CORS origin
+  //   res.header("Access-Control-Allow-Credentials", "true"); // Allow credentials
+  //   next();
+  // });
 
 // ----------------------------------------------------------------------------
 
