@@ -2,11 +2,11 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import path from "path";
-// import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// // const __filename = fileURLToPath(import.meta.url);
-// // const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 const app = express();
@@ -47,6 +47,15 @@ app.use(express.urlencoded({
 
 app.use(cookieParser())
 
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('/*', (req, res) => {
+  // Only handle non-API routes
+  if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  }
+});
+
 // app.js
 app.use((err, req, res, next) => {
     console.error('Global Error Middleware:', {
@@ -70,9 +79,7 @@ app.use((err, req, res, next) => {
     });
   });
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  });
+
 
   // app.use((req, res, next) => {
   //   console.log("Request Origin:", req.headers.origin); // Log origin for debugging
