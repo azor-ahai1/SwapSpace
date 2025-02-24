@@ -35,9 +35,12 @@ const Signup = () => {
 
       const response = await axios.post('/users/register', payload);
 
+<<<<<<< HEAD
       // Dispatch login action
       // dispatch(login(response.data.user));
       // navigate('/');
+=======
+>>>>>>> cd1684f735f3d876d36caf3158c053106daaa24d
       if (response?.data?.success) {
         dispatch(
           login({
@@ -51,7 +54,6 @@ const Signup = () => {
       }
     } catch (error) {
       console.error('Signup error:', error);
-      // Handle signup error (show toast, etc.)
     } finally {
       setLoading(false);
     }
