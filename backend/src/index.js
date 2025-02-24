@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import { app } from "./app.js";
-=======
-// import dotenv from "dotenv"
-// import connectDB from "./db/index.js";
-// import { app } from "./app.js";
->>>>>>> cd1684f735f3d876d36caf3158c053106daaa24d
 
 // // --------------------------------
 // import path from "path"
