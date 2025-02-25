@@ -89,7 +89,17 @@ const UserProfile = () => {
       case 'products':
         return (
           <div className="bg-dark-primary/80 p-6 rounded-lg">
-            <h2 className="text-2xl font-bold text-light-blue mb-4">My Products</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-light-blue">My Products</h2>
+              {isCurrentUser && (
+                <Link 
+                  to="/add-product" 
+                  className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90"
+                >
+                  + Add Product
+                </Link>
+              )}
+            </div>
             {userProfile.productHistory?.length === 0 ? (
               <EmptyState message="No products listed" />
             ) : (

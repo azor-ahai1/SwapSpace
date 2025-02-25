@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
-// import path from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 const app = express();
@@ -99,6 +99,11 @@ app.use("/api/v1/users", userRouter)
 app.use("/api/v1/products", productRouter)
 app.use("/api/v1/categories", categoryRouter)
 app.use("/api/v1/orders", orderRouter)
+
+app.use(express.static(path.join(__dirname, "dist")));
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.use("*", (req, res) => {
   res.status(404).json({
