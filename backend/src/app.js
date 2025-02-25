@@ -16,7 +16,7 @@ const app = express();
 
 app.use(cors({
     // origin: 'http://localhost:5173', 
-    origin: process.env.CORS_ORIGIN, 
+    origin: process.env.CORS_ORIGIN  || process.env.FRONTEND_URL, 
     // origin: (origin, callback) => {
     //   const allowedOrigins = [
     //     "https://swap-space-hdmz.vercel.app", // Frontend origin
@@ -50,11 +50,9 @@ app.use(cookieParser())
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('/*', (req, res) => {
+app.get('*', (req, res) => {
   // Only handle non-API routes
-  if (!req.path.startsWith('/api')) {
-      res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-  }
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // app.js
