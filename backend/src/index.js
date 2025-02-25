@@ -17,6 +17,10 @@ dotenv.config({
 
 connectDB().then(
     () => {
+        console.log("✅ Database connected. Logging registered routes...");
+
+        // Log all registered routes
+        expressListRoutes(app);
         app.listen(process.env.PORT || 8000, () =>{
             console.log(`Server is running on port ${process.env.PORT || 8000}`);
         })
