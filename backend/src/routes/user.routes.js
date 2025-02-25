@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserOrderHistory, getUserProfile} from "../controllers/user.controller.js"
+import {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserOrderHistory, getUserProfile, test} from "../controllers/user.controller.js"
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -28,6 +28,6 @@ router.route("/user-order-history").get(verifyJWT, getUserOrderHistory)
 
 router.route("/profile/:userId").get(verifyJWT, getUserProfile)
 
-
+router.route("/test").get(test)
 
 export default router

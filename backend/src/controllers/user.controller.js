@@ -634,6 +634,20 @@ const getUserProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const test = asyncHandler(async (req, res) => {
+    try {
+        return res.status(200).json({
+          success: true,
+          message: "API is working correctly"
+        });
+      } catch (error) {
+        return res.status(500).json({
+          success: false,
+          message: error.message || "Something went wrong"
+        });
+      }
+})
+
 export {
     registerUser, 
     loginUser, 
@@ -644,7 +658,8 @@ export {
     updateAccountDetails,
     getUserOrderHistory, 
     getUserProductHistory, 
-    getUserProfile
+    getUserProfile,
+    test
 }
 
 
