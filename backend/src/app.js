@@ -50,12 +50,6 @@ app.use(cookieParser())
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use("*", (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "API endpoint not found",
-  });
-});
 
 app.get('*', (req, res) => {
   // Only handle non-API routes
@@ -106,8 +100,7 @@ app.use("/api/v1/products", productRouter)
 app.use("/api/v1/categories", categoryRouter)
 app.use("/api/v1/orders", orderRouter)
 
-// Catch-all for undefined API routes
-app.use((req, res) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
     message: "API endpoint not found",
