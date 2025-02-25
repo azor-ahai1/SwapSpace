@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import path from 'path';
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
+// import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
 
 const app = express();
@@ -48,13 +48,13 @@ app.use(express.urlencoded({
 
 app.use(cookieParser())
 
-app.use(express.static(path.join(__dirname, 'dist')));
+// app.use(express.static(path.join(__dirname, 'dist')));
 
 
-app.get('*', (req, res) => {
-  // Only handle non-API routes
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   // Only handle non-API routes
+//   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+// });
 
 // app.js
 app.use((err, req, res, next) => {
