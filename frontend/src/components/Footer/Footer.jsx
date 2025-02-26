@@ -1,18 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaLinkedin, FaTwitter, FaGithub } from 'react-icons/fa';
+import { FaLinkedin, FaInstagram, FaGithub } from 'react-icons/fa';
 
 const Footer = () => {
   const socialLinks = [
-    { name: 'LinkedIn', url: '#', icon: <FaLinkedin size={24} /> },
-    { name: 'Twitter', url: '#', icon: <FaTwitter size={24} /> },
-    { name: 'GitHub', url: '#', icon: <FaGithub size={24} /> }
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/aashish-shukla-240472288/', icon: <FaLinkedin size={24} /> },
+    { name: 'Instagram', url: 'https://www.instagram.com/aashish__shukla/', icon: <FaInstagram size={24} /> },
+    { name: 'GitHub', url: 'https://github.com/azor-ahai1', icon: <FaGithub size={24} /> }
   ];
 
   const quickLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Services', path: '/services' },
     { name: 'Contact', path: '/contact' }
   ];
 

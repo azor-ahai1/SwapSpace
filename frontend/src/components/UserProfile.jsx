@@ -89,12 +89,17 @@ const UserProfile = () => {
       case 'products':
         return (
           <div className="bg-dark-primary/80 p-6 rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-light-blue">My Products</h2>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-4 space-y-3 md:space-y-0">
+              {/* Section Title */}
+              <h2 className="text-2xl font-bold text-light-blue text-center md:text-left w-full">
+                My Products
+              </h2>
+
+              {/* Add Product Button */}
               {isCurrentUser && (
                 <Link 
                   to="/add-product" 
-                  className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90"
+                  className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90 flex items-center justify-center w-full md:w-auto"
                 >
                   + Add Product
                 </Link>
@@ -125,9 +130,10 @@ const UserProfile = () => {
     <div className="min-h-screen bg-gradient-primary py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* User Header */}
-        <div className="bg-dark-primary/90 rounded-t-xl p-6 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-full overflow-hidden">
+        <div className="bg-dark-primary/90 rounded-t-xl p-6 flex flex-col md:flex-row items-center md:justify-between space-y-4 md:space-y-0">
+          {/* User Info */}
+          <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 text-center md:text-left">
+            <div className="w-20 h-20 rounded-full overflow-hidden">
               <img 
                 src={userProfile.profileImage || '/default-avatar.png'} 
                 alt="Profile" 
@@ -135,21 +141,24 @@ const UserProfile = () => {
               />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-light-blue">
+              <h1 className="text-2xl md:text-3xl font-bold text-light-blue">
                 {userProfile.name}
               </h1>
               <p className="text-gray-400">{userProfile.email}</p>
             </div>
           </div>
+
+          {/* Edit Profile Button */}
           {isCurrentUser && (
             <Link 
               to={`/users/edit/${userProfile._id}`} 
-              className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90 flex items-center"
+              className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90 flex items-center justify-center w-full md:w-auto"
             >
               <FaEdit className="mr-2" /> Edit Profile
             </Link>
           )}
         </div>
+
 
         {/* Tabs */}
         {isCurrentUser && (

@@ -66,7 +66,8 @@ const AllProducts = () => {
     const fetchProductsAndCategories = async () => {
       try {
         // Check if user is authenticated
-        await axios.get('/users/current-user');
+        // Why to Check? There is no need to check it here. 
+        // await axios.get('/users/current-user');  
 
         // Fetch products
         const productsResponse = await axios.get('/products/get-all-products');
