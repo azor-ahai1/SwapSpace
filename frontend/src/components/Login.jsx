@@ -16,6 +16,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [error, setError] = useState(null)
+  
 
   const {
     register,
@@ -45,6 +47,7 @@ const Login = () => {
         data: error.response?.data,
         message: error.message
       });
+      setError(error.message);
       // Handle login error (show toast, error message, etc.)
       // You might want to add error handling logic here
     } finally {
@@ -138,7 +141,7 @@ const Login = () => {
               </p>
             )}
           </div>
-
+          
           {/* Submit Button */}
           <div>
             <button
@@ -154,6 +157,11 @@ const Login = () => {
             >
               {loading ? 'Logging In...' : 'Login'}
             </button>
+            {error && (
+              <p className="mt-2 text-sm text-red-400">
+                {error}
+              </p>
+            )}
           </div>
 
           {/* Footer Links */}

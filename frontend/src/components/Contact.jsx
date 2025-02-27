@@ -1,4 +1,6 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import axios from '../axios';
 import { Link } from 'react-router-dom';
 import { 
   FaLinkedin,
@@ -13,6 +15,26 @@ import {
 } from 'react-icons/fa';
 
 const Contact = () => {
+  const { register, handleSubmit, reset } = useForm();
+  const onSubmit = async (data) => {
+    try {
+      const payload = {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+      };
+
+      const response = await axios.post('/users/review', payload);
+      if (response?.data?.success) {
+        reset();
+        console.log('Message sent successfully');
+      } 
+     } catch (error) {
+      console.error('Review sending failed:', error);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-primary text-white relative overflow-hidden">
       {/* Background Effect */}
@@ -151,61 +173,28 @@ const Contact = () => {
           <div className="bg-dark-primary rounded-xl p-8 border border-dark-primary/30">
             <h2 className="text-3xl font-bold text-light-blue mb-8">Send a Message</h2>
             
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label htmlFor="name" className="block mb-2 text-light-blue">Name</label>
-                <input 
-                  type="text" 
-                  id="name" 
-                  className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none"
-                  placeholder="Your name"
-                />
+                <input type="text" id="name" {...register('name')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your name" />
               </div>
-              
+
               <div>
                 <label htmlFor="email" className="block mb-2 text-light-blue">Email</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none"
-                  placeholder="Your email address"
-                />
+                <input type="email" id="email" {...register('email')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your email address" />
               </div>
-              
+
               <div>
                 <label htmlFor="subject" className="block mb-2 text-light-blue">Subject</label>
-                <input 
-                  type="text" 
-                  id="subject" 
-                  className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none"
-                  placeholder="Subject of your message"
-                />
+                <input type="text" id="subject" {...register('subject')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Subject of your message" />
               </div>
-              
+
               <div>
                 <label htmlFor="message" className="block mb-2 text-light-blue">Message</label>
-                <textarea 
-                  id="message" 
-                  rows="2" 
-                  className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none resize-none"
-                  placeholder="Your message..."
-                ></textarea>
+                <textarea id="message" rows="2" {...register('message')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none resize-none" placeholder="Your message..."></textarea>
               </div>
-              
-              <button 
-                type="submit"
-                className="
-                  w-full py-4 px-6 
-                  bg-light-blue text-dark-primary 
-                  rounded-xl font-semibold text-lg
-                  hover:bg-opacity-90 
-                  transition-all 
-                  flex items-center justify-center gap-2
-                "
-              >
-                Send Message
-                {/* <FaEnvelope /> */}
-              </button>
+
+              <button type="submit" className="w-full py-4 px-6 bg-light-blue text-dark-primary rounded-xl font-semibold text-lg hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">Send Message</button>
             </form>
           </div>
         </div>

@@ -64,7 +64,7 @@ const addProduct = asyncHandler(async (req, res) => {
         .populate('owner', 'name email');
 
     if (!createdProduct){
-        throw new ApiError(404, "Something went wrong while creating product.");
+        throw new ApiError(500, "Something went wrong while creating product.");
     }
 
     return res.status(201).json(

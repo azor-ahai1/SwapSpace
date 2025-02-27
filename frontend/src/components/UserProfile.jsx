@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fa';
 import axios from '../axios';
 import { selectUser } from '../store/authSlice';
+import defaultImage from '../assets/default.jpg' ;
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -21,6 +22,9 @@ const UserProfile = () => {
   const [error, setError] = useState(null);
 
   const isCurrentUser = loggedInUser?._id === userId;
+
+  // const isValidEmail = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9-]+\.nitrr\.ac\.in)$/.test(userProfile?.email);
+  const isValidEmail = /^[a-zA-Z0-9._%+-]+@(gmail\.com)$/.test(userProfile?.email);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,7 +59,13 @@ const UserProfile = () => {
             <ProfileDetailItem 
               icon={<FaEnvelope className="text-light-blue mr-3" />} 
               label="Email" 
-              value={userProfile.email} 
+              value={
+                <>
+                  {userProfile.email} 
+                  {/* {isValidEmail && <span className="text-green-400 ml-2">Verified Account</span>} */}
+                </>
+              } 
+              
             />
             {userProfile.phoneNumber && (
               <ProfileDetailItem 
@@ -135,7 +145,7 @@ const UserProfile = () => {
           <div className="flex flex-col md:flex-row items-center space-x-0 md:space-x-4 text-center md:text-left">
             <div className="w-20 h-20 rounded-full overflow-hidden">
               <img 
-                src={userProfile.profileImage || '/default-avatar.png'} 
+                src={userProfile.profileImage || defaultImage} 
                 alt="Profile" 
                 className="w-full h-full object-cover"
               />
@@ -148,13 +158,20 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {/* Edit Profile Button */}
-          {isCurrentUser && (
+          {/* Edit Profile or Send Message Button */}
+          {isCurrentUser ? (
             <Link 
               to={`/users/edit/${userProfile._id}`} 
               className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90 flex items-center justify-center w-full md:w-auto"
             >
               <FaEdit className="mr-2" /> Edit Profile
+            </Link>
+          ) : (
+            <Link 
+              to={`/users/conversation/${userProfile._id}`} 
+              className="bg-light-blue text-dark-primary px-4 py-2 rounded-lg hover:bg-opacity-90 flex items-center justify-center w-full md:w-auto"
+            >
+              <FaEnvelope className="mr-2" /> Send Message
             </Link>
           )}
         </div>

@@ -1,7 +1,8 @@
 import { Router } from "express";
-import {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserOrderHistory, getUserProfile, test} from "../controllers/user.controller.js"
+import {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, updateAccountDetails, getUserOrderHistory, getUserProfile, test, sendOTP, verifyOTP, getUserData, sendReview} from "../controllers/user.controller.js"
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { getAllPreviousMessages, sendMessage } from "../controllers/message.controller.js";
 
 const router = Router()
 
@@ -29,5 +30,17 @@ router.route("/user-order-history").get(verifyJWT, getUserOrderHistory)
 router.route("/profile/:userId").get(verifyJWT, getUserProfile)
 
 router.route("/test").get(test)
+
+router.route("/sendOTP").post(sendOTP)
+
+router.route("/verifyOTP").post(verifyOTP)
+
+router.route("/send-message").post(verifyJWT, sendMessage);
+
+router.route("/get-all-previous-messages").post(verifyJWT, getAllPreviousMessages);
+
+router.route("/get-user-data/:userId").get(verifyJWT, getUserData)
+
+router.route("/review").post(sendReview)
 
 export default router

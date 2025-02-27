@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -17,12 +17,26 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [sentOTP, setSentOTP] = useState(null);
+  const [otpStatus, setOtpStatus] = useState(false);
+  const [error, setError] = useState(null);
 
+  
   const {
     register,
     handleSubmit,
+    watch, 
     formState: { errors },
   } = useForm();
+  
+  const emailValue = watch('email');
+  const otpValue = watch('otp');
+  const isValidEmail = /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9-]+\.nitrr\.ac\.in)$/.test(emailValue);
+
+  useEffect(() => {
+    setSentOTP(null);
+    setOtpStatus(false);
+  }, []);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -55,6 +69,43 @@ const Signup = () => {
       setLoading(false);
     }
   };
+
+  const onSendOTP = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        email: emailValue
+      } 
+      const response = await axios.post('/users/sendOTP', payload);
+      if (response?.data?.success) {
+        setSentOTP(response?.data?.data.otp);
+        console.log('OTP Sent Successfully');
+      }
+    } catch (error){
+      console.error('OTP Sending error:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  const onVerifyOTP = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        otp: otpValue,
+        OTP: sentOTP
+      } 
+      const response = await axios.post('/users/verifyOTP', payload);
+      if (response?.data?.success) {
+        setOtpStatus(true);
+        console.log('OTP verified Successfully');
+      }
+    } catch (error){
+      console.error('OTP Verification error:', error);
+      setError("OTP not Verified!")
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div 
@@ -121,8 +172,8 @@ const Signup = () => {
                 {...register('email', {
                   required: 'Email is required',
                   pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: 'Invalid email address',
+                    value: /^[a-zA-Z0-9._%+-]+@(gmail\.com|[a-zA-Z0-9-]+\.nitrr\.ac\.in)$/,
+                    message: 'Invalid email address. It must be either gmail id or college email id',
                   },
                 })}
                 className={`
@@ -132,7 +183,7 @@ const Signup = () => {
                   text-white placeholder-gray-400
                   focus:outline-none focus:ring-2 focus:ring-light-blue
                 `}
-                placeholder="you@example.com"
+                placeholder="you@gmail.com"
               />
             </div>
             {errors.email && (
@@ -141,6 +192,45 @@ const Signup = () => {
               </p>
             )}
           </div>
+          
+          {/* Send OTP Button */}
+          {isValidEmail && !sentOTP && (
+            <button
+              type="button"
+              onClick={onSendOTP}
+              className="w-full py-3 mt-2 rounded-lg text-dark-primary font-semibold bg-light-blue hover:bg-opacity-90 transition-all"
+            >
+              {loading ? 'Sending OTP...' : 'Send OTP'}
+            </button>
+          )}
+
+          {/* OTP Input */}
+          {sentOTP && !otpStatus && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Enter OTP</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  {...register('otp', { required: 'OTP is required' })}
+                  className="block w-full px-4 py-3 bg-dark-primary border rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-light-blue"
+                  placeholder="Enter OTP"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onVerifyOTP(watch('otp'))}
+                className="w-full py-3 mt-2 rounded-lg text-dark-primary font-semibold bg-light-blue hover:bg-opacity-90 transition-all"
+              >
+                {loading ? 'Verifying...' : 'Verify OTP'}
+              </button>
+              {errors.otp && <p className="mt-2 text-sm text-red-400">{errors.otp.message}</p>}
+              {error && (
+                <p className="mt-2 text-sm text-red-400">
+                  {error}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Password Input */}
           <div>
@@ -188,12 +278,12 @@ const Signup = () => {
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !otpStatus}
               className={`
                 w-full py-3 rounded-lg text-dark-primary font-semibold
-                ${loading 
+                ${loading || !otpStatus 
                   ? 'bg-gray-600 cursor-not-allowed' 
-                  : 'bg-light-blue hover:bg-opacity-90'}
+                  : 'bg-light-blue hover:bg-opacity-90'} 
                 transition-all duration-300
               `}
             >

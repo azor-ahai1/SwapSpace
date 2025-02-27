@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from '../axios';
 import { 
@@ -241,8 +241,9 @@ const ViewProduct = () => {
             quantity: product.quantity,
             price: product.price,
         });
-        // alert('Order placed successfully');
-        console.log(response.data);
+        alert('Order placed successfully');
+        // console.log(response.data);
+        navigate(`/users/${user._id}`)
     } catch (err) {
         console.error('Error buying product:', err);
         // setError(err.response?.data?.message || 'Failed to buy product');
@@ -264,15 +265,15 @@ const ViewProduct = () => {
             orderId: orderToCancel._id,
             productId: orderToCancel.product
         });
-
-        // alert('Order cancelled successfully');
-
         const ordersResponse = await axios.get('/users/user-order-history');
         setUserOrderHistory(ordersResponse.data.data.orderHistory);
         setProduct(prevProduct => ({
-            ...prevProduct,
-            productStatus: 'Available'
+          ...prevProduct,
+          productStatus: 'Available'
         }));
+        
+        alert('Order cancelled successfully');
+        navigate(`/users/${user._id}`)
     } catch (err) {
         console.error('Error cancelling order:', err);
         alert('Failed to cancel order');
@@ -376,6 +377,9 @@ const ViewProduct = () => {
                 hover:border hover:border-light-blue hover:bg-blue-950 hover:text-light-blue
                 transition-all
               "
+              onClick={() => {
+                navigate(`/users/${product.owner._id}`)
+              }}
             >
               Contact Seller
             </button>

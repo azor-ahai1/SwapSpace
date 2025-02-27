@@ -8,7 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { createBrowserRouter, RouterProvider, HashRouter} from 'react-router-dom'
 // import {Protected} from './components/index.js'
 
-import {Home, Login, Signup, AddProduct, ViewProduct, AllProducts, UserProfile, EditProfile, EditProduct, Contact} from './pages/index.js'
+import {Home, Login, Signup, AddProduct, ViewProduct, AllProducts, UserProfile, EditProfile, EditProduct, Contact, Conversation} from './pages/index.js'
 
 const router = createBrowserRouter([
   {
@@ -55,6 +55,10 @@ const router = createBrowserRouter([
           path: "/users/edit/:userId",
           element: <EditProfile />
         },
+        {
+          path: "/users/conversation/:receiverId",
+          element: <Conversation />
+        }
     ],
   },
 ])

@@ -3,6 +3,8 @@ import {ApiError} from "../utils/ApiError.js"
 import { User } from "../models/user.model.js";
 import { uploadProfileImageOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { transporter } from "../utils/emailSender.js";
+
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
@@ -634,6 +636,21 @@ const getUserProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const getUserData = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    return res.status(200).json(
+        new ApiResponse(
+            200, 
+            user, 
+            "User profile retrieved successfully"
+        )
+    );
+})
+
 const test = asyncHandler(async (req, res) => {
     try {
         return res.status(200).json({
@@ -648,6 +665,73 @@ const test = asyncHandler(async (req, res) => {
       }
 })
 
+const sendOTP = asyncHandler(async (req, res) => {
+    const {email} = req.body;
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    try {
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: 'Your OTP Code',
+            text: `Your OTP code is: ${otp}. It will expire in 10 minutes.`
+        };
+
+        const response = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ' + response.response);
+        return res
+        .status(200)
+        .json(
+          new ApiResponse(200, { otp: otp }, "OTP sent successfully")
+        ) 
+    } catch (error) {
+        // console.log('Error sending email:', error);
+        throw new ApiError(400, error?.message || "Error sending email")
+    }
+})
+
+const verifyOTP = asyncHandler(async (req, res) => {
+    const {otp, OTP} = req.body;
+    const otpNumber = Number(otp);
+    const OTPNumber = Number(OTP);
+    if (otpNumber !== OTPNumber) {
+        return res.status(400).json({
+            success: false,
+            message: "Invalid OTP"
+        });
+    }
+    try {
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(200, { }, "OTP verified successfully")
+        ) 
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong")
+    }
+})
+
+const sendReview = asyncHandler(async (req, res) => {
+    const {name, email, subject, message} = req.body;
+    try {
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: 'abhimamyuji@gmail.com',
+            subject: `SwapSpace Review from ${name} for ${subject}`,
+            text: `Sender's Name: ${name} \n\n Sender's Email: ${email} \n\n Sender's Subject: ${subject} \n\n Sender's Message: ${message}`
+        };
+        const response = await transporter.sendMail(mailOptions);
+        console.log('Email sent: ' + response.response);
+        return res
+        .status(200)
+        .json(
+          new ApiResponse(200, {},  "Response sent successfully")
+        ) 
+    } catch (error) {
+        // console.log('Error sending email:', error);
+        throw new ApiError(400, error?.message || "Error sending email")
+    }
+})
+
 export {
     registerUser, 
     loginUser, 
@@ -659,7 +743,11 @@ export {
     getUserOrderHistory, 
     getUserProductHistory, 
     getUserProfile,
-    test
+    test,
+    sendOTP,
+    verifyOTP,
+    getUserData,
+    sendReview
 }
 
 
