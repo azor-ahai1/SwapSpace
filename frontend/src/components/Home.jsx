@@ -26,7 +26,7 @@ const SectionSeparator = ({ title }) => (
 );
 
 const HomePage = () => {
-  // Get authentication state from Redux
+  
   const userAuth = useSelector(selectUserAuth);
 
   return (
@@ -80,27 +80,13 @@ const HomePage = () => {
               color: 'text-light-blue',
               bgGradient: 'from-light-blue/10 to-dark-primary'
             },
-            // {
-            //   icon: FaHandshake,
-            //   title: 'Secure Transactions',
-            //   description: 'Safe and transparent buying and selling process.',
-            //   color: 'text-deep-blue',
-            //   bgGradient: 'from-deep-blue/10 to-dark-primary'
-            // },
             {
               icon: FaUsers,
               title: 'Community Focused',
               description: 'Connect with local buyers and sellers in your community.',
               color: 'text-slate-gray',
               bgGradient: 'from-slate-gray/10 to-dark-primary'
-            },
-            // {
-            //   icon: FaShoppingCart,
-            //   title: 'Wide Range of Products',
-            //   description: 'Find everything from electronics to furniture, books, and more.',
-            //   color: 'text-light-blue',
-            //   bgGradient: 'from-light-blue/10 to-dark-primary'
-            // }
+            }
           ].map((feature, index) => (
             <div 
               key={index}
@@ -138,8 +124,6 @@ const HomePage = () => {
               step: '3',
               title: 'Connect ',
               description: 'Communicate with sellers/buyers and buy/sell your product.'
-              // title: 'Connect & Trade',
-              // description: 'Communicate with sellers/buyers and complete your transaction.'
             }
           ].map((item, index) => (
             <div 

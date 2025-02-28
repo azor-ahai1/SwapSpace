@@ -7,10 +7,7 @@ const authSlice = createSlice({
     userAuth: false,
     token: null
   },
-  // initialState: {
-  //   user: 'abc', 
-  //   userAuth: true
-  // },
+
   reducers: {
     login(state, action) {
       state.user = action.payload.user;

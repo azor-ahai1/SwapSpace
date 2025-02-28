@@ -43,18 +43,6 @@ const AddProduct = () => {
     value: category.name
   }));
 
-//   const categories = [
-//     { name: 'Electronics', value: 'Electronics' },
-//     { name: 'Books', value: 'Books' },
-//     { name: 'Clothing', value: 'Clothing' },
-//     { name: 'Furniture', value: 'Furniture' },
-//     { name: 'Sports & Fitness', value: 'Sports & Fitness' },
-//     { name: 'Musical Instruments', value: 'Musical Instruments' },
-//     { name: 'Stationery', value: 'Stationery' },
-//     { name: 'Accessories', value: 'Accessories' },
-//     { name: 'Miscellaneous', value: 'Miscellaneous' }
-//   ];
-
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const validImageFiles = files.filter(file => 
@@ -72,17 +60,15 @@ const AddProduct = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // Create FormData for file upload
+
       const formData = new FormData();
       
       console.log('Selected Category:', data.category);
 
-      // Append text data
       Object.keys(data).forEach(key => {
         formData.append(key, data[key]);
       });
 
-      // Append images
       images.forEach((file, index) => {
         formData.append(`images`, file);
       });
@@ -93,11 +79,10 @@ const AddProduct = () => {
         }
       });
 
-      // Navigate to products or dashboard
       navigate('/');
     } catch (error) {
       console.error('Product creation error:', error.response?.data || error.message);
-      // Handle error (show toast, error message)
+      
     } finally {
       setLoading(false);
     }

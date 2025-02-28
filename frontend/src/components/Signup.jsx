@@ -49,9 +49,6 @@ const Signup = () => {
 
       const response = await axios.post('/users/register', payload);
 
-      // Dispatch login action
-      // dispatch(login(response.data.user));
-      // navigate('/');
       if (response?.data?.success) {
         dispatch(
           login({

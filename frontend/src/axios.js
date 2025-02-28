@@ -5,7 +5,6 @@ import { logout } from './store/authSlice';
 axios.defaults.withCredentials = true;
 
 const instance = axios.create({
-  // baseURL: 'https://swap-space-yd5n.vercel.app/api/v1',
   baseURL: import.meta.env.VITE_API_BASE_URL ,
   withCredentials: true,
   headers: {

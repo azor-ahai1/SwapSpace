@@ -33,10 +33,7 @@ const getAllPreviousMessages = asyncHandler(async (req, res) => {
         },
         { $sort: { createdAt: 1 } }
     ]);
-    // let messages = await Message.find({ sender, receiver }).sort({ createdAt: 1 });
-    // if (!messages) {
-    //     messages = [];
-    // }
+
     return res.status(200).json(
         new ApiResponse(
             200,

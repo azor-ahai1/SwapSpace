@@ -28,13 +28,13 @@ const ProductCard = ({ product }) => {
           </span>
           <span className="flex items-center text-gray-300">
             <FaBoxOpen className="mr-2 text-light-blue" />
-            {product.quantity} left
+            Quantity: {product.quantity} 
           </span>
         </div>
         <div className="mt-4 flex justify-between items-center">
           <span className="text-sm text-gray-400 flex items-center">
             <FaTag className="mr-2 text-light-blue" />
-            {product.category.name}
+            {product.productStatus}
           </span>
           <Link 
             to={`/products/${product._id}`}
@@ -65,15 +65,9 @@ const AllProducts = () => {
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
       try {
-        // Check if user is authenticated
-        // Why to Check? There is no need to check it here. 
-        // await axios.get('/users/current-user');  
-
-        // Fetch products
         const productsResponse = await axios.get('/products/get-all-products');
         setProducts(productsResponse.data.data);
 
-        // Fetch categories
         const categoriesResponse = await axios.get('/categories/getallcategories');
         setCategories(categoriesResponse.data.data);
 

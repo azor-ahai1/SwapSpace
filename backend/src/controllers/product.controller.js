@@ -29,8 +29,6 @@ const addProduct = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Invalid category");
     }
 
-    // const product = new Product({ name, price, description, category, quantity });
-
     const productImagePaths = req.files?.images;
     
     if (!productImagePaths || productImagePaths.length === 0) {
@@ -101,8 +99,6 @@ const updateProduct = asyncHandler(async (req, res) => {
         throw new ApiError(404, "Invalid category");
     }
 
-    // const product = new Product({ name, price, description, category, quantity });
-
     let uploadedImages = [];
     try {
         uploadedImages = JSON.parse(productImages || '[]');
@@ -111,7 +107,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
 
     const productImagePaths = req.files?.images;
-    // const uploadedImages = product.productImages || [];
+    
     if (productImagePaths && productImagePaths.length !== 0) {
         for (const file of productImagePaths) {
             const localFilePath = file.path;

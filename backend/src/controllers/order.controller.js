@@ -105,6 +105,11 @@ const getProductOrders = asyncHandler(async (req, res) => {
             $unwind: "$buyerDetails"
         },
         {
+            $sort: {
+                createdAt: -1
+            }
+        },
+        {
             $project: {
                 _id: 1,
                 orderStatus: 1,
@@ -170,7 +175,6 @@ const getProductAllOrders = asyncHandler(async (req, res) => {
 
 
 const acceptOrder = asyncHandler(async (req, res) => {
-    // const { orderId } = req.params;
     const { orderId } = req.body;
     const order = await Order.findById(orderId);
     if (!order) {
@@ -222,7 +226,6 @@ const acceptOrder = asyncHandler(async (req, res) => {
 
 
 const rejectOrder = asyncHandler(async (req, res) => {
-    // const { orderId } = req.params;
     const { orderId } = req.body;
     const order = await Order.findById(orderId);
     if (!order) {

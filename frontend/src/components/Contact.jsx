@@ -76,7 +76,7 @@ const Contact = () => {
                 <FaEnvelope className="text-light-blue text-2xl mt-1" />
                 <div>
                   <h3 className="text-xl font-semibold text-light-blue">Email</h3>
-                  <p className="text-gray-300">aashishshukla910@gmail.com</p>
+                  <p className="text-gray-300">swapspace.help@gmail.com</p>
                 </div>
               </div>
               
@@ -93,7 +93,7 @@ const Contact = () => {
             <div className="mt-12">
               <h3 className="text-xl font-semibold text-light-blue mb-6">Connect With Me</h3>
               <div className="flex gap-6">
-                <a 
+                {/* <a 
                   href="https://www.linkedin.com/in/aashish-shukla-240472288/" 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -107,7 +107,7 @@ const Contact = () => {
                   "
                 >
                   <FaLinkedin />
-                </a>
+                </a> */}
                 <a 
                   href="https://github.com/azor-ahai1" 
                   target="_blank" 
@@ -123,7 +123,7 @@ const Contact = () => {
                 >
                   <FaGithub />
                 </a>
-                <a 
+                {/* <a 
                   href="https://instagram.com/aashish__shukla" 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -137,7 +137,7 @@ const Contact = () => {
                   "
                 >
                   <FaInstagram />
-                </a>
+                </a> */}
               </div>
             </div>
             {/* Currently Working on */}

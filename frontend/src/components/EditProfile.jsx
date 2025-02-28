@@ -11,7 +11,7 @@ import {
 } from 'react-icons/fa';
 import axios from '../axios';
 import { selectUser } from '../store/authSlice';
-import { login } from '../store/authSlice'; // To update user in Redux store
+import { login } from '../store/authSlice'; 
 
 const EditProfile = () => {
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ const EditProfile = () => {
     formState: { errors }
   } = useForm();
 
-  // Populate form with existing user data
   useEffect(() => {
     if (currentUser) {
       setValue('name', currentUser.name);
@@ -38,7 +37,6 @@ const EditProfile = () => {
     }
   }, [currentUser, setValue]);
 
-  // Handle profile image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -51,7 +49,6 @@ const EditProfile = () => {
     }
   };
 
-  // Submit form handler
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -74,10 +71,9 @@ const EditProfile = () => {
         }
       });
 
-      // Update Redux store with new user data
       dispatch(login({ 
         user: response.data.data,
-        accessToken: currentUser.accessToken // Maintain existing token
+        accessToken: currentUser.accessToken 
       }));
       console.log("User Data updated successfully")
       navigate(`/users/${currentUser._id}`);

@@ -27,7 +27,6 @@ const generateAccessAndRefreshTokens = async(userId) => {
     }
 }
 
-
 const registerUser = asyncHandler(async (req, res) => {
     const {name, email, password} = req.body
     console.log("email: ", email);
@@ -40,33 +39,9 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const existedUser = await User.findOne({email})
 
-    // const existedUser = await User.findOne({
-    //     $or: [{username}, {email}]
-    // })
-
     if (existedUser) {
         throw new ApiError(409, "User with E-mail already exists");
     }
-
-    // const avatarLocalPath = req.files?.avatar[0]?.path;
-    // // const coverImageLocalPath = req.files?.coverImage[0]?.path;
-    // // it was sending undefined when there was no coverimage
-
-    // let coverImageLocalPath;
-    // if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-    //     coverImageLocalPath = req.files.coverImage[0].path;
-    // }
-
-    // if(!avatarLocalPath){
-    //     throw new ApiError(400, "Avatar is required");
-    // }
-    
-    // const avatar = await uploadOnCloudinary(avatarLocalPath)
-    // const coverImage = await uploadOnCloudinary(coverImageLocalPath)
-    
-    // if(!avatar){
-    //     throw new ApiError(400, "Avatar is required");
-    // }
 
     const user = await User.create({
         name, 
@@ -86,23 +61,9 @@ const registerUser = asyncHandler(async (req, res) => {
         new ApiResponse(200, createdUser, "User Registered Successfully")
     )
 
-    // if(fullName==""){
-    //     throw new ApiError(400, "Full name is required");
-    // }
-
-
-    // res.status(200).json({
-    //  message: "User registered successfully",
-    // })
 }) 
 
 const loginUser = asyncHandler(async (req, res) => {
-    // req body -> data
-    // username or email
-    // find the user
-    // password check
-    // access and refresh tokens
-    // send cookies
 
     const { email, password  } = req.body;
 
@@ -166,8 +127,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         req.user._id,
         {
             $unset: {
-                // refreshToken: undefined
-                refreshToken: 1   // it removes the field from the document
+                refreshToken: 1   
             }
         },
         {
@@ -334,7 +294,6 @@ const getUserOrderHistory = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                // Use $size on the actual array
                 totalBuyerOrders: { $size: "$orderHistory" }
             }
         },
@@ -348,7 +307,6 @@ const getUserOrderHistory = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                // Use $size on the seller orders array
                 totalSellerOrders: { $size: "$sellerOrders" }
             }
         },
@@ -389,7 +347,6 @@ const getUserProductHistory = asyncHandler(async (req, res) => {
         },
         {
             $addFields: {
-                // Use $size on the actual array
                 totalProducts: { $size: "$productHistory" }
             }
         },
@@ -410,109 +367,6 @@ const getUserProductHistory = asyncHandler(async (req, res) => {
     );
 });
 
-
-const getUserDashboardData = asyncHandler(async (req, res) => {
-    const user = await User.aggregate([
-        {
-            $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id)
-            }
-        },
-        {
-            $lookup: {
-                from: "products",
-                localField: "_id",
-                foreignField: "owner",
-                as: "products"
-            }
-        },
-        {
-            $lookup: {
-                from: "orders",
-                let: { userId: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $or: [
-                                    { $eq: ["$buyer", "$$userId"] },
-                                    { $eq: ["$seller", "$$userId"] }
-                                ]
-                            }
-                        }
-                    }
-                ],
-                as: "orders"
-            }
-        },
-        {
-            $addFields: {
-                totalProducts: { $size: "$products" },
-                availableProducts: {
-                    $size: {
-                        $filter: {
-                            input: "$products",
-                            as: "product",
-                            cond: { $eq: ["$$product.productStatus", "Available"] }
-                        }
-                    }
-                },
-                totalBuyerOrders: {
-                    $size: {
-                        $filter: {
-                            input: "$orders",
-                            as: "order",
-                            cond: { $eq: ["$$order.buyer", "$_id"] }
-                        }
-                    }
-                },
-                totalSellerOrders: {
-                    $size: {
-                        $filter: {
-                            input: "$orders",
-                            as: "order",
-                            cond: { $eq: ["$$order.seller", "$_id"] }
-                        }
-                    }
-                },
-                totalRevenue: {
-                    $sum: {
-                        $cond: {
-                            if: { $eq: ["$orders.orderStatus", "Accepted"] },
-                            then: "$orders.orderPrice",  // Ensure this field exists
-                            else: 0
-                        }
-                    }
-                }
-            }
-        },
-        {
-            $project: {
-                products: 1,
-                orders: 1,
-                totalProducts: 1,
-                availableProducts: 1,
-                totalBuyerOrders: 1,
-                totalSellerOrders: 1,
-                totalRevenue: 1
-            }
-        }
-    ]);
-
-    return res.status(200).json(
-        new ApiResponse(
-            200,
-            user[0] || {
-                totalProducts: 0,
-                availableProducts: 0,
-                totalBuyerOrders: 0,
-                totalSellerOrders: 0,
-                totalRevenue: 0
-            },
-            "User dashboard data retrieved successfully"
-        )
-    );
-});
 
 
 const getUserProfile = asyncHandler(async (req, res) => {
@@ -542,9 +396,14 @@ const getUserProfile = asyncHandler(async (req, res) => {
                             $expr: {
                                 $or: [
                                     { $eq: ["$buyer", "$$userId"] },
-                                    { $eq: ["$seller", "$$userId"] }
+                                    // { $eq: ["$seller", "$$userId"] }
                                 ]
                             }
+                        }
+                    },
+                    {
+                        $sort: {
+                            "createdAt": -1
                         }
                     },
                     {
@@ -622,7 +481,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
         }
     ]);
 
-    // Check if user exists
     if (!userProfile || userProfile.length === 0) {
         throw new ApiError(404, "User not found");
     }
@@ -672,8 +530,8 @@ const sendOTP = asyncHandler(async (req, res) => {
         const mailOptions = {
             from: process.env.EMAIL,
             to: email,
-            subject: 'Your OTP Code',
-            text: `Your OTP code is: ${otp}. It will expire in 10 minutes.`
+            subject: 'Your OTP Code for SwapSpace',
+            text: `${otp} is the required otp code to sign up for SwapSpace. It will expire in 10 minutes.`
         };
 
         const response = await transporter.sendMail(mailOptions);
@@ -749,8 +607,6 @@ export {
     getUserData,
     sendReview
 }
-
-
 
 
 

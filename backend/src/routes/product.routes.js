@@ -17,6 +17,7 @@ router.route("/add-product").post(
 )
 
 router.route("/get-product/:productId").get(getProductById);
+
 router.route("/update-product/:productId").patch(
     verifyJWT,
     upload.fields([
@@ -27,6 +28,7 @@ router.route("/update-product/:productId").patch(
     ]),
     updateProduct
 );
+
 router.route("/get-all-products").get(getAllProducts);
 
 

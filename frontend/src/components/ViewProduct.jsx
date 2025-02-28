@@ -50,7 +50,7 @@ const ProductOrders = ({ productId }) => {
           await axios.post('/orders/accept-order', { orderId });
           setOrders(prev => prev.filter(order => order._id !== orderId));
       } catch (err) {
-          // Handle error
+        setError('Failed to Accept order :' , err.response?.data?.message);
       }
   };
 
@@ -59,7 +59,7 @@ const ProductOrders = ({ productId }) => {
           await axios.post('/orders/reject-order', { orderId });
           setOrders(prev => prev.filter(order => order._id !== orderId));
       } catch (err) {
-          // Handle error
+        setError('Failed to Reject order :' , err.response?.data?.message);
       }
   };
 
@@ -209,7 +209,7 @@ const ViewProduct = () => {
         try {
             const ordersResponse = await axios.get('/users/user-order-history')
             // setUserOrderHistory(ordersResponse.data.data);
-            console.log(ordersResponse.data.data.orderHistory);
+            // console.log(ordersResponse.data.data.orderHistory);
             setUserOrderHistory(ordersResponse.data.data.orderHistory);
         } catch (err) {
             console.error('Error fetching user-order-history details:', err);
@@ -464,33 +464,3 @@ const ViewProduct = () => {
 
 export default ViewProduct;
 
-
-
-
-
-
-
-//   const onBuyProduct = async () => {
-//     const user = {};
-//     try {
-//         user = await axios.get('/users/current-user')
-//     } catch (err) {
-//         navigate('/login');
-//     }
-//     if(user._id === product.owner._id){
-//         return alert('Both Buyer and Seller are Same!');
-//     }
-//     try {
-//         const response = await axios.post('/orders/place-order', {
-//             buyer: user._id,
-//             seller: product.owner._id,
-//             product: productId,
-//             quantity: product.quantity,
-//             price: product.price,
-//         });
-//         console.log(response.data);
-//     } catch (err) {
-//         console.error('Error buying product:', err);
-//         // setError(err.response?.data?.message || 'Failed to buy product');
-//     }
-//   }

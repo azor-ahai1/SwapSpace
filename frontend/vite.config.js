@@ -1,27 +1,15 @@
-// import { defineConfig } from 'vite'
-// import react from '@vitejs/plugin-react'
-
-// // https://vite.dev/config/
-// export default defineConfig({
-//   plugins: [react()],
-// })
-
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode`
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    // React plugin
     plugins: [react()],
 
-    // Base path
     base: '/',
 
-    // Resolve aliases
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -31,7 +19,6 @@ export default defineConfig(({ mode }) => {
       }
     },
 
-    // Build configuration
     build: {
       outDir: 'dist',
       sourcemap: mode === 'development',
@@ -46,7 +33,6 @@ export default defineConfig(({ mode }) => {
       }
     },
 
-    // Server configuration
     server: {
       port: 5173,
       open: true,

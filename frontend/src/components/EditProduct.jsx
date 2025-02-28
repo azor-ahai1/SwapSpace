@@ -11,34 +11,27 @@ const EditProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  // State for form data
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [quantity, setQuantity] = useState('');
   
-  // State for image handling
   const [productImages, setProductImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [previewNewImages, setPreviewNewImages] = useState([]);
 
-  // Categories state
   const [categories, setCategories] = useState([]);
 
-  // Loading and error states
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch product details and categories on component mount
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        // Fetch product details
         const productResponse = await axios.get(`/products/get-product/${productId}`);
         const product = productResponse.data.data;
 
-        // Set form data
         setName(product.name);
         setPrice(product.price);
         setDescription(product.description);
@@ -46,7 +39,6 @@ const EditProduct = () => {
         setQuantity(product.quantity);
         setProductImages(product.productImages);
 
-        // Fetch categories
         const categoriesResponse = await axios.get('/categories/getallcategories');
         setCategories(categoriesResponse.data.data);
       } catch (err) {
@@ -58,57 +50,46 @@ const EditProduct = () => {
     fetchProductDetails();
   }, [productId]);
 
-  // Handle new image upload
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     
-    // Create preview URLs for new images
     const newImagePreviews = files.map(file => URL.createObjectURL(file));
     
-    // Update state
     setNewImages(prev => [...prev, ...files]);
     setPreviewNewImages(prev => [...prev, ...newImagePreviews]);
   };
 
-  // Remove existing image
   const removeExistingImage = (imageToRemove) => {
     setProductImages(prev => 
       prev.filter(image => image !== imageToRemove)
     );
   };
 
-  // Remove new image
   const removeNewImage = (indexToRemove) => {
     setNewImages(prev => prev.filter((_, index) => index !== indexToRemove));
     setPreviewNewImages(prev => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // Create FormData
       const formData = new FormData();
 
-      // Add text fields
       formData.append('name', name);
       formData.append('price', price);
       formData.append('description', description);
       formData.append('category', category);
       formData.append('quantity', quantity);
 
-      // Send existing images as JSON string
       formData.append('productImages', JSON.stringify(productImages));
 
-      // Add new images
       newImages.forEach((file) => {
         formData.append('images', file);
       });
 
-      // Submit update
       const response = await axios.patch(
         `/products/update-product/${productId}`, 
         formData,
@@ -119,7 +100,6 @@ const EditProduct = () => {
         }
       );
 
-      // Navigate back or show success
       navigate(`/products/${productId}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update product');
@@ -127,7 +107,6 @@ const EditProduct = () => {
     }
   };
 
-  // Render method
   return (
     <div className="min-h-screen bg-gradient-primary py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto bg-dark-primary/90 rounded-xl p-8">

@@ -10,10 +10,8 @@ const createOrGetCategory = asyncHandler(async (categoryName) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
         .join(' ');
 
-    // Try to find existing category
     let category = await Category.findOne({ name: formattedName });
 
-    // If category doesn't exist, create it
     if (!category) {
         category = await Category.create({ name: formattedName });
     }
@@ -23,11 +21,11 @@ const createOrGetCategory = asyncHandler(async (categoryName) => {
 
 
 const getAllCategories = asyncHandler(async (req, res) => {
-    // Fetch all categories and optionally count products
+
     const categories = await Category.aggregate([
         {
             $lookup: {
-                from: "products", // Make sure this matches your collection name
+                from: "products", 
                 localField: "_id",
                 foreignField: "category",
                 as: "products"
@@ -46,7 +44,7 @@ const getAllCategories = asyncHandler(async (req, res) => {
             }
         },
         {
-            $sort: { productCount: -1 } // Sort by most used categories
+            $sort: { productCount: -1 } 
         }
     ]);
 
@@ -54,7 +52,6 @@ const getAllCategories = asyncHandler(async (req, res) => {
         new ApiResponse(200, categories, "Categories retrieved successfully")
     );
 });
-
 
 
 export { getAllCategories, createOrGetCategory };

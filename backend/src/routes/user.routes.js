@@ -24,7 +24,6 @@ router.route("/update-profile").patch(
     updateAccountDetails
 )
 
-
 router.route("/user-order-history").get(verifyJWT, getUserOrderHistory)
 
 router.route("/profile/:userId").get(verifyJWT, getUserProfile)

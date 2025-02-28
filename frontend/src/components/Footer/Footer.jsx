@@ -4,8 +4,8 @@ import { FaLinkedin, FaInstagram, FaGithub } from 'react-icons/fa';
 
 const Footer = () => {
   const socialLinks = [
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/aashish-shukla-240472288/', icon: <FaLinkedin size={24} /> },
-    { name: 'Instagram', url: 'https://www.instagram.com/aashish__shukla/', icon: <FaInstagram size={24} /> },
+    // { name: 'LinkedIn', url: 'https://www.linkedin.com/in/aashish-shukla-240472288/', icon: <FaLinkedin size={24} /> },
+    // { name: 'Instagram', url: 'https://www.instagram.com/aashish__shukla/', icon: <FaInstagram size={24} /> },
     { name: 'GitHub', url: 'https://github.com/azor-ahai1', icon: <FaGithub size={24} /> }
   ];
 

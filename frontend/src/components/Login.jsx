@@ -48,8 +48,6 @@ const Login = () => {
         message: error.message
       });
       setError(error.message);
-      // Handle login error (show toast, error message, etc.)
-      // You might want to add error handling logic here
     } finally {
       setLoading(false);
     }
