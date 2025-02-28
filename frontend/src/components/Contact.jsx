@@ -147,22 +147,22 @@ const Contact = () => {
                 <div className="flex items-start gap-4">
                   <FaLaptopCode className="text-light-blue text-2xl mt-1" />
                   <div>
-                    <h4 className="font-semibold text-light-blue">User Reviews</h4>
-                    <p className="text-gray-300">Getting proper feedback from the users.</p>
+                    <h4 className="font-semibold text-light-blue">User Experience</h4>
+                    <p className="text-gray-300">Enhancing features for better user experience.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <FaTools className="text-light-blue text-2xl mt-1" />
                   <div>
                     <h4 className="font-semibold text-light-blue">Secure Website</h4>
-                    <p className="text-gray-300">Signup via OTP and other methods to secure the website.</p>
+                    <p className="text-gray-300">Enhancing the privacy and security in the website.</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <FaCode className="text-light-blue text-2xl mt-1" />
                   <div>
-                    <h4 className="font-semibold text-light-blue">Mobile Responsiveness</h4>
-                    <p className="text-gray-300">Enhancing the UI/UX for mobile devices</p>
+                    <h4 className="font-semibold text-light-blue">Responsiveness</h4>
+                    <p className="text-gray-300">Enhancing the UI/UX for various devices</p>
                   </div>
                 </div>
               </div>
@@ -176,22 +176,22 @@ const Contact = () => {
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div>
                 <label htmlFor="name" className="block mb-2 text-light-blue">Name</label>
-                <input type="text" id="name" {...register('name')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your name" />
+                <input type="text" id="name" {...register('name')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your name" required/>
               </div>
 
               <div>
                 <label htmlFor="email" className="block mb-2 text-light-blue">Email</label>
-                <input type="email" id="email" {...register('email')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your email address" />
+                <input type="email" id="email" {...register('email')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Your email address" required/>
               </div>
 
               <div>
                 <label htmlFor="subject" className="block mb-2 text-light-blue">Subject</label>
-                <input type="text" id="subject" {...register('subject')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Subject of your message" />
+                <input type="text" id="subject" {...register('subject')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none" placeholder="Subject of your message" required/>
               </div>
 
               <div>
                 <label htmlFor="message" className="block mb-2 text-light-blue">Message</label>
-                <textarea id="message" rows="2" {...register('message')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none resize-none" placeholder="Your message..."></textarea>
+                <textarea id="message" rows="2" {...register('message')} className="w-full bg-dark-primary border border-dark-primary/50 focus:border-light-blue rounded-xl p-4 text-white focus:outline-none resize-none" placeholder="Your message..." required></textarea>
               </div>
 
               <button type="submit" className="w-full py-4 px-6 bg-light-blue text-dark-primary rounded-xl font-semibold text-lg hover:bg-opacity-90 transition-all flex items-center justify-center gap-2">Send Message</button>

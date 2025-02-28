@@ -32,9 +32,9 @@ const ProductOrders = ({ productId }) => {
               setLoading(true);
               // console.log('Product Id:', productId);
               const response = await axios.get(`/orders/product-orders/${productId}`);
-              console.log('Full response:', response);
+              // console.log('Full response:', response);
               setOrders(response.data.data);
-              console.log(orders);
+              // console.log(orders);
           } catch (err) {
               setError(err.response?.data?.message || 'Failed to fetch orders');
           } finally {
@@ -148,6 +148,7 @@ const ProductOrders = ({ productId }) => {
 
 const ViewProduct = () => {
   const [product, setProduct] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [userOrderHistory, setUserOrderHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -183,6 +184,25 @@ const ViewProduct = () => {
     }
   }, [productId]);
 
+  
+  useEffect(() => {
+    const fetchProductOrders = async () => {
+        try {
+            setLoading(true);
+            // console.log('Product Id:', productId);
+            const response = await axios.get(`/orders/product-all-orders/${productId}`);
+            // console.log('Full response:', response);
+            setOrders(response.data.data);
+            // console.log(orders);
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to fetch orders');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchProductOrders();
+}, [productId]);
 
   useEffect(() => {
     const fetchUserOrderHistory = async () => {
@@ -204,6 +224,13 @@ const ViewProduct = () => {
     );
   };
 
+  const isProductSold = () => {
+    return orders.some(order => 
+      order.product === product?._id && order.orderStatus === "Accepted"
+    );
+  };
+  // console.log(isProductSold())
+  
 
   if (loading) {
     return (
@@ -271,7 +298,7 @@ const ViewProduct = () => {
           ...prevProduct,
           productStatus: 'Available'
         }));
-        
+
         alert('Order cancelled successfully');
         navigate(`/users/${user._id}`)
     } catch (err) {
@@ -383,33 +410,46 @@ const ViewProduct = () => {
             >
               Contact Seller
             </button>
-            {isProductInOrderHistory() ? (
-            <button 
-              onClick={onCancelOrder}
-              className="
-                w-full py-3 
-                bg-red-500 text-white 
+            {
+              isProductSold() ? (
+                <button disabled={true}
+                className="w-full py-3 
+                bg-yellow-500 text-white 
                 rounded-lg font-semibold
                 hover:bg-red-600
-                transition-all
-              "
-            >
-              Cancel Order
-            </button>
-          ) : (
-            <button 
-              onClick={onBuyProduct}
-              className="
-                w-full py-3 
-                bg-blue-300 text-dark-primary 
-                rounded-lg font-semibold
-                hover:border hover:border-light-blue hover:bg-blue-950 hover:text-light-blue
-                transition-all
-              "
-            >
-              Buy Product
-            </button>
-          )}
+                transition-all"
+                >
+                  Sold
+                </button>
+              ) : (isProductInOrderHistory() ? (
+                <button 
+                  onClick={onCancelOrder}
+                  className="
+                    w-full py-3 
+                    bg-red-500 text-white 
+                    rounded-lg font-semibold
+                    hover:bg-red-600
+                    transition-all
+                  "
+                >
+                  Cancel Order
+                </button>
+              ) : (
+                <button 
+                  onClick={onBuyProduct}
+                  className="
+                    w-full py-3 
+                    bg-blue-300 text-dark-primary 
+                    rounded-lg font-semibold
+                    hover:border hover:border-light-blue hover:bg-blue-950 hover:text-light-blue
+                    transition-all
+                  "
+                >
+                  Buy Product
+                </button>
+              ))
+            }
+            
           </div>
         </div>
         {isProductOwner && (

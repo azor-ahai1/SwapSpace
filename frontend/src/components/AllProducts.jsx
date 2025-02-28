@@ -90,6 +90,8 @@ const AllProducts = () => {
     fetchProductsAndCategories();
   }, [navigate]);
 
+  // console.log(products);
+
   useEffect(() => {
     // Apply filters
     let result = products;
@@ -98,6 +100,7 @@ const AllProducts = () => {
       result = result.filter(product => 
         product.category.name === filters.category
       );
+      // console.log(filters.category)
     }
 
     if (filters.minPrice) {
@@ -114,8 +117,7 @@ const AllProducts = () => {
 
     if (filters.searchQuery) {
       result = result.filter(product => 
-        product.name.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        product.category.name.toLowerCase().includes(filters.searchQuery.toLowerCase())
+        product.name.toLowerCase().includes(filters.searchQuery.toLowerCase())
       );
     }
 

@@ -7,6 +7,8 @@ import {
   FaUsers, 
   FaArrowRight
 } from 'react-icons/fa';
+import { selectUserAuth } from '../store/authSlice.js';
+import { useSelector } from 'react-redux';
 
 const SectionSeparator = ({ title }) => (
   <div className="relative my-16 py-4">
@@ -24,6 +26,9 @@ const SectionSeparator = ({ title }) => (
 );
 
 const HomePage = () => {
+  // Get authentication state from Redux
+  const userAuth = useSelector(selectUserAuth);
+
   return (
     <div className="min-h-screen bg-gradient-primary text-white relative overflow-hidden">
       {/* Background Effect */}
@@ -44,13 +49,15 @@ const HomePage = () => {
             Connecting Students to Buy and Sell Items Effortlessly
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 ">
-            <Link 
-              to="/signup" 
-              className="flex items-center justify-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-lg sm:text-xl bg-light-blue text-dark-primary rounded-xl font-semibold hover:bg-opacity-90 transition-all group"
-            >
-              Get Started
-              <FaArrowRight className="transform transition-transform group-hover:translate-x-1" />
-            </Link>
+            {!userAuth && 
+              <Link 
+                to="/signup" 
+                className="flex items-center justify-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-lg sm:text-xl bg-light-blue text-dark-primary rounded-xl font-semibold hover:bg-opacity-90 transition-all group"
+              >
+                Get Started
+                <FaArrowRight className="transform transition-transform group-hover:translate-x-1" />
+              </Link>
+            }
             <Link 
               to="/products/allproducts" 
               className="flex items-center justify-center gap-3 px-8 sm:px-10 py-3 sm:py-4 text-lg sm:text-xl bg-light-blue text-dark-primary rounded-xl font-semibold hover:bg-opacity-90 transition-all group"
@@ -155,35 +162,39 @@ const HomePage = () => {
           ))}
         </section>
 
-        <SectionSeparator title="Join SwapSpace" />
 
         {/* Call to Action */}
-        <section className="text-center bg-dark-primary rounded-xl p-8 sm:p-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-light-blue/10 to-dark-primary/30 opacity-20"></div>
-          <div className="relative z-10">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 text-light-blue">
-              Start Your Swapping Journey
-            </h2>
-            <p className="max-w-xl sm:max-w-2xl mx-auto text-gray-300 mb-6 sm:mb-10  text-base sm:text-lg">
-              Join SwapSpace today and be part of a community that makes buying and selling second-hand items easy, affordable, and sustainable.
-            </p>
-            <Link 
-              to="/signup"
-              className="
-                inline-flex items-center gap-3 
-                px-8 sm:px-12 py-4 sm:py-5 text-lg sm:text-xl 
-                bg-light-blue text-dark-primary 
-                rounded-xl font-bold 
-                hover:bg-opacity-90 
-                transition-all 
-                group
-              "
-             >
-              Sign Up Now
-              <FaArrowRight className="transform transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </section>
+        { !userAuth && <>
+            <SectionSeparator title="Join SwapSpace" />
+            <section className="text-center bg-dark-primary rounded-xl p-8 sm:p-16 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-light-blue/10 to-dark-primary/30 opacity-20"></div>
+              <div className="relative z-10">
+                <h2 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 text-light-blue">
+                  Start Your Swapping Journey
+                </h2>
+                <p className="max-w-xl sm:max-w-2xl mx-auto text-gray-300 mb-6 sm:mb-10  text-base sm:text-lg">
+                  Join SwapSpace today and be part of a community that makes buying and selling second-hand items easy, affordable, and sustainable.
+                </p>
+                <Link 
+                  to="/signup"
+                  className="
+                    inline-flex items-center gap-3 
+                    px-8 sm:px-12 py-4 sm:py-5 text-lg sm:text-xl 
+                    bg-light-blue text-dark-primary 
+                    rounded-xl font-bold 
+                    hover:bg-opacity-90 
+                    transition-all 
+                    group
+                  "
+                >
+                  Sign Up Now
+                  <FaArrowRight className="transform transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+            </section>
+          </>
+        }
+        
       </div>
     </div>
   );

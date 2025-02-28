@@ -174,6 +174,7 @@ const EditProfile = () => {
                 <FaEnvelope className="text-gray-400" />
               </div>
               <input
+                disabled={true}
                 type="email"
                 {...register('email', {
                   required: 'Email is required',

@@ -124,6 +124,50 @@ const getProductOrders = asyncHandler(async (req, res) => {
 
 });
 
+const getProductAllOrders = asyncHandler(async (req, res) => {
+    const { productId } = req.params;
+    // console.log(productId);
+    const product = await Product.findById(productId);
+    if (!product) {
+        return res.status(404).json(
+            new ApiError(404, "Product not found")
+        );
+    }
+
+    // console.log(product);
+
+    const orders = await Order.aggregate([
+        {
+            $match: { 
+                product: new mongoose.Types.ObjectId(productId),
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "buyer",
+                foreignField: "_id",
+                as: "buyerDetails"
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                orderStatus: 1,
+                buyer: 1,
+                product: 1
+            }
+        } 
+    ]) 
+
+
+    
+    return res.status(200).json(
+        new ApiResponse(200, orders, "Product orders retrieved successfully")
+    );
+
+});
+
 
 const acceptOrder = asyncHandler(async (req, res) => {
     // const { orderId } = req.params;
@@ -230,4 +274,4 @@ const rejectOrder = asyncHandler(async (req, res) => {
 
 
 
-export { placeOrder, cancelOrder, acceptOrder, getProductOrders, rejectOrder}
+export { placeOrder, cancelOrder, acceptOrder, getProductOrders, rejectOrder, getProductAllOrders}
