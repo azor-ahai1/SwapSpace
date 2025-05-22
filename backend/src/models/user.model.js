@@ -46,10 +46,19 @@ const userSchema = new mongoose.Schema(
             }
         ],
 
+        // verifiedProfile: {
+        //     type: Boolean,
+        //     default: false
+        // },
+
+        // verifiedDetails: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'Verify'
+        // },
+
         refreshToken: {
             type: String
         }
-
     },
     {
         timestamps: true

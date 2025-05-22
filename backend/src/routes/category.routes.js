@@ -4,6 +4,6 @@ import { getAllCategories } from "../controllers/category.controller.js";
 
 const router = Router();
 
-router.route("/getallcategories").get(getAllCategories);
+router.route("/get-all-categories").get(getAllCategories);
 
 export default router;

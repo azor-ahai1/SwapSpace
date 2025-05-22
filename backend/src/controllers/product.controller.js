@@ -160,7 +160,7 @@ const getAllProductFromSameCategory = asyncHandler(async (req, res) => {
 })
 
 const getAllProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find()
+    const products = await Product.find().populate('category', 'name')
     return res.status(200).json(
         new ApiResponse(200, products, "Products Retrieved Successfully")
     )

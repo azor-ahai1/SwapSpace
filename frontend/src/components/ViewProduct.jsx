@@ -83,13 +83,13 @@ const ProductOrders = ({ productId }) => {
                       <img 
                           src={order.productDetails?.productImages?.[0] || ""} 
                           alt="Product" 
-                          className="w-16 h-16 object-cover rounded-lg"
+                          className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
                       />
-                      <div>
-                          <h4 className="text-white font-semibold">
+                      <div className="min-w-0 flex-1">
+                          <h4 className="text-white font-semibold truncate">
                               {order.productDetails?.name || 'Unknown Product'}
                           </h4>
-                          <p className="text-gray-400">
+                          <p className="text-gray-400 text-sm">
                               Quantity: {order.quantity || 0} | Price: ₹{order.price || 0}
                           </p>
                       </div>
@@ -109,11 +109,11 @@ const ProductOrders = ({ productId }) => {
                       </div>
                   </div>
 
-                  <div className="flex space-x-4 mt-4">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-4">
                       <button
                           onClick={() => handleAcceptOrder(order._id)}
                           className="
-                              w-1/2 py-2 
+                              w-full sm:w-1/2 py-2 
                               bg-green-600 text-white 
                               rounded-lg 
                               flex items-center justify-center 
@@ -127,7 +127,7 @@ const ProductOrders = ({ productId }) => {
                       <button
                           onClick={() => handleRejectOrder(order._id)}
                           className="
-                              w-1/2 py-2 
+                              w-full sm:w-1/2 py-2 
                               bg-red-600 text-white 
                               rounded-lg 
                               flex items-center justify-center 
@@ -309,22 +309,24 @@ const ViewProduct = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-primary py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto bg-dark-primary/90 rounded-xl shadow-2xl p-8 grid md:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gradient-primary py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto bg-dark-primary/90 rounded-xl shadow-2xl p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
         {/* Image Gallery */}
-        <div>
+        <div className="w-full">
           <Swiper
             navigation={true}
             modules={[Navigation]}
-            className="product-swiper rounded-xl"
+            className="product-swiper rounded-xl w-full"
           >
             {product.productImages.map((image, index) => (
               <SwiperSlide key={index}>
-                <img 
-                  src={image} 
-                  alt={`Product ${index + 1}`} 
-                  className="w-full h-96 object-cover rounded-xl"
-                />
+                <div className="w-full aspect-square sm:aspect-video lg:aspect-square">
+                  <img 
+                    src={image} 
+                    alt={`Product ${index + 1}`} 
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -332,8 +334,8 @@ const ViewProduct = () => {
 
         {/* Product Details */}
         <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-light-blue mb-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-light-blue">
             {product.name}
           </h1>
           
@@ -344,8 +346,10 @@ const ViewProduct = () => {
               className="
                 bg-light-blue text-dark-primary 
                 px-4 py-2 rounded-lg 
-                flex items-center space-x-2
+                flex items-center justify-center space-x-2
                 hover:bg-opacity-90
+                w-full sm:w-auto
+                flex-shrink-0
               "
             >
               <FaEdit />
@@ -354,10 +358,10 @@ const ViewProduct = () => {
           )}
         </div>
 
-          <div className="flex items-center space-x-4 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0 mb-4">
             <div className="flex items-center space-x-2">
               <FaMoneyBillWave className="text-light-blue" />
-              <span className="text-xl font-semibold text-white">
+              <span className="text-lg sm:text-xl font-semibold text-white">
                 ₹{product.price}
               </span>
             </div>
@@ -371,34 +375,34 @@ const ViewProduct = () => {
 
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <FaClipboardList className="text-light-blue mt-1" />
-              <div>
+              <FaClipboardList className="text-light-blue mt-1 flex-shrink-0" />
+              <div className="min-w-0 flex-1">
                 <h3 className="font-semibold text-white">Description</h3>
-                <p className="text-gray-300">{product.description}</p>
+                <p className="text-gray-300 break-words">{product.description}</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-3">
-              <FaTag className="text-light-blue" />
-              <div>
+              <FaTag className="text-light-blue flex-shrink-0" />
+              <div className="min-w-0 flex-1">
                 <h3 className="font-semibold text-white">Category</h3>
                 <p className="text-gray-300">{product.category.name}</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-3">
-              <FaUser className="text-light-blue" />
-              <div>
+              <FaUser className="text-light-blue flex-shrink-0" />
+              <div className="min-w-0 flex-1">
                 <h3 className="font-semibold text-white">Seller</h3>
                 <p className="text-gray-300">{product.owner.name}</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 flex space-x-4">
+          <div className="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
             <button
               className="
-                w-full py-3 
+                w-full sm:flex-1 py-3 
                 bg-blue-300 text-dark-primary 
                 rounded-lg font-semibold
                 hover:border hover:border-light-blue hover:bg-blue-950 hover:text-light-blue
@@ -413,7 +417,7 @@ const ViewProduct = () => {
             {
               isProductSold() ? (
                 <button disabled={true}
-                className="w-full py-3 
+                className="w-full sm:flex-1 py-3 
                 bg-yellow-500 text-white 
                 rounded-lg font-semibold
                 hover:bg-red-600
@@ -425,7 +429,7 @@ const ViewProduct = () => {
                 <button 
                   onClick={onCancelOrder}
                   className="
-                    w-full py-3 
+                    w-full sm:flex-1 py-3 
                     bg-red-500 text-white 
                     rounded-lg font-semibold
                     hover:bg-red-600
@@ -438,7 +442,7 @@ const ViewProduct = () => {
                 <button 
                   onClick={onBuyProduct}
                   className="
-                    w-full py-3 
+                    w-full sm:flex-1 py-3 
                     bg-blue-300 text-dark-primary 
                     rounded-lg font-semibold
                     hover:border hover:border-light-blue hover:bg-blue-950 hover:text-light-blue
@@ -453,7 +457,7 @@ const ViewProduct = () => {
           </div>
         </div>
         {isProductOwner && (
-          <div className="md:col-span-2">
+          <div className="col-span-1 lg:col-span-2">
             <ProductOrders productId={productId} />
           </div>
         )}
@@ -463,4 +467,3 @@ const ViewProduct = () => {
 };
 
 export default ViewProduct;
-

@@ -470,6 +470,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
                 instaID: 1,
                 productHistory: 1,
                 orderHistory: 1,
+                // verifiedProfile: 1,
                 totalProducts: 1,
                 availableProducts: 1,
                 totalBuyerOrders: 1,

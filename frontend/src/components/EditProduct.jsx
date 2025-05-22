@@ -39,7 +39,7 @@ const EditProduct = () => {
         setQuantity(product.quantity);
         setProductImages(product.productImages);
 
-        const categoriesResponse = await axios.get('/categories/getallcategories');
+        const categoriesResponse = await axios.get('/categories/get-all-categories');
         setCategories(categoriesResponse.data.data);
       } catch (err) {
         setError('Failed to fetch product details');
@@ -108,17 +108,17 @@ const EditProduct = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-primary py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto bg-dark-primary/90 rounded-xl p-8">
-        <h2 className="text-3xl font-bold text-light-blue mb-8">Edit Product</h2>
+    <div className="min-h-screen bg-gradient-primary py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto bg-dark-primary/90 rounded-xl p-4 sm:p-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-light-blue mb-6 sm:mb-8">Edit Product</h2>
         
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-300 p-4 rounded-lg mb-6">
+          <div className="bg-red-500/20 border border-red-500 text-red-300 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {/* Product Name */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -129,12 +129,12 @@ const EditProduct = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-dark-primary border border-slate-gray rounded-lg text-white"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-primary border border-slate-gray rounded-lg text-white text-sm sm:text-base"
             />
           </div>
 
           {/* Price and Quantity Row */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Price
@@ -144,7 +144,7 @@ const EditProduct = () => {
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-dark-primary border border-slate-gray rounded-lg text-white"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-primary border border-slate-gray rounded-lg text-white text-sm sm:text-base"
               />
             </div>
             <div>
@@ -156,7 +156,7 @@ const EditProduct = () => {
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-dark-primary border border-slate-gray rounded-lg text-white"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-primary border border-slate-gray rounded-lg text-white text-sm sm:text-base"
               />
             </div>
           </div>
@@ -170,7 +170,7 @@ const EditProduct = () => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-              className="w-full px-4 py-3 bg-dark-primary border border-slate-gray rounded-lg text-white"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-primary border border-slate-gray rounded-lg text-white text-sm sm:text-base"
             >
               {categories.map((cat) => (
                 <option key={cat.name} value={cat.name}>
@@ -190,7 +190,7 @@ const EditProduct = () => {
               onChange={(e) => setDescription(e.target.value)}
               required
               rows={4}
-              className="w-full px-4 py-3 bg-dark-primary border border-slate-gray rounded-lg text-white"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-dark-primary border border-slate-gray rounded-lg text-white text-sm sm:text-base resize-vertical"
             />
           </div>
 
@@ -201,20 +201,31 @@ const EditProduct = () => {
             </label>
             
             {/* Existing Images */}
-            <div className="grid grid-cols-4 gap-4 mb-4">
-              {productImages.map((image, index) => (
-                <div key={index} className="relative">
-                   <img src={image} alt={`Product Image ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
-                    <button 
-                      type="button" 
-                      onClick={() => removeExistingImage(image)} 
-                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                    >
-                      <FaTrash />
-                    </button>
+            {productImages.length > 0 && (
+              <div className="mb-4">
+                <h4 className="text-sm text-gray-400 mb-2">Current Images:</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4">
+                  {productImages.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <div className="aspect-square">
+                        <img 
+                          src={image} 
+                          alt={`Product Image ${index + 1}`} 
+                          className="w-full h-full object-cover rounded-lg" 
+                        />
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => removeExistingImage(image)} 
+                        className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 sm:p-1.5 text-xs hover:bg-red-600 transition-colors shadow-lg"
+                      >
+                        <FaTrash className="w-2 h-2 sm:w-3 sm:h-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
             {/* New Image Upload */}
             <input 
@@ -224,26 +235,43 @@ const EditProduct = () => {
               onChange={handleImageUpload} 
               className="mb-4"
             />
-            <div className="grid grid-cols-4 gap-4">
-              {previewNewImages.map((image, index) => (
-                <div key={index} className="relative">
-                  <img src={image} alt={`New Image Preview ${index + 1}`} className="w-full h-32 object-cover rounded-lg" />
-                  <button 
-                    type="button" 
-                    onClick={() => removeNewImage(index)} 
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
-                  >
-                    <FaTrash />
-                  </button>
+
+            {/* New Image Previews */}
+            {previewNewImages.length > 0 && (
+              <div>
+                <h4 className="text-sm text-gray-400 mb-2">New Images to Upload:</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4">
+                  {previewNewImages.map((image, index) => (
+                    <div key={index} className="relative group">
+                      <div className="aspect-square">
+                        <img 
+                          src={image} 
+                          alt={`New Image Preview ${index + 1}`} 
+                          className="w-full h-full object-cover rounded-lg" 
+                        />
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => removeNewImage(index)} 
+                        className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 sm:p-1.5 text-xs hover:bg-red-600 transition-colors shadow-lg"
+                      >
+                        <FaTrash className="w-2 h-2 sm:w-3 sm:h-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
           <button 
             type="submit" 
-            className={`w-full py-3 bg-blue-600 text-white rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+            className={`w-full py-3 sm:py-4 bg-blue-600 text-white rounded-lg font-medium text-sm sm:text-base transition-all ${
+              loading 
+                ? 'opacity-50 cursor-not-allowed' 
+                : 'hover:bg-blue-700 active:bg-blue-800'
+            }`} 
             disabled={loading}
           >
             {loading ? 'Updating...' : 'Update Product'}

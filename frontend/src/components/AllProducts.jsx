@@ -65,10 +65,12 @@ const AllProducts = () => {
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
       try {
-        const productsResponse = await axios.get('/products/get-all-products');
-        setProducts(productsResponse.data.data);
+        const [productsResponse, categoriesResponse] = await Promise.all([
+          axios.get('/products/get-all-products'),
+          axios.get('/categories/get-all-categories')
+        ]);
 
-        const categoriesResponse = await axios.get('/categories/getallcategories');
+        setProducts(productsResponse.data.data);
         setCategories(categoriesResponse.data.data);
 
         setLoading(false);
