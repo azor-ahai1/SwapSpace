@@ -219,6 +219,31 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     ))
 })
 
+
+const changePassword = asyncHandler(async (req, res) => {
+    const {email, newPassword} = req.body
+    console.log(email, newPassword)
+
+    const user = await User.findOne({email})
+    
+    if(!user) {
+        throw new ApiError(404, "User not found")
+    }
+
+    // user.password = newPassword
+    // await user.save({validateBeforeSave: false})
+    user.set({ password: newPassword });
+    await user.save();
+
+    return res
+    .status(200)
+    .json(new ApiResponse(
+        200,
+        {},
+        "Password changed successfully"
+    ))
+})
+
 const getCurrentUser = asyncHandler(async (req, res) => {
     return res
     .status(200)
@@ -532,7 +557,7 @@ const sendOTP = asyncHandler(async (req, res) => {
             from: process.env.EMAIL,
             to: email,
             subject: 'Your OTP Code for SwapSpace',
-            text: `${otp} is the required otp code to sign up for SwapSpace. It will expire in 10 minutes.`
+            text: `${otp} is the required OTP code for SwapSpace. It will expire in 10 minutes.`
         };
 
         const response = await transporter.sendMail(mailOptions);
@@ -606,7 +631,8 @@ export {
     sendOTP,
     verifyOTP,
     getUserData,
-    sendReview
+    sendReview,
+    changePassword
 }
 
 

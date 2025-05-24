@@ -175,7 +175,7 @@ const Login = () => {
             </div>
             <div className="mt-2 text-sm text-gray-300">
               <Link 
-                to="/forgot-password" 
+                to="/changePassword" 
                 className="text-light-blue hover:underline"
               >
                 Forgot Password?

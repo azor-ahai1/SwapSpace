@@ -284,7 +284,7 @@ const Signup = () => {
                 transition-all duration-300
               `}
             >
-              {loading ? 'Signing Up...' : 'Create Account'}
+              {loading && otpStatus ? 'Signing Up...' : 'Create Account'}
             </button>
           </div>
 

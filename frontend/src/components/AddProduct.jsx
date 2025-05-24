@@ -25,7 +25,7 @@ const AddProduct = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get('/categories/getallcategories');
+        const response = await axios.get('/categories/get-all-categories');
         setCategories(response.data.data.map(category => ({
             _id: category._id,
             name: category.name

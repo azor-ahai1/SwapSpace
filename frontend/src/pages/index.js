@@ -9,6 +9,7 @@ import EditProfile from "./EditProfile";
 import EditProduct  from "./EditProduct";
 import Contact from "./Contact";
 import Conversation from "./Conversation";
+import ChangePassword from "./ChangePassword";
 
 
 export { 
@@ -22,6 +23,7 @@ export {
     EditProfile,
     EditProduct,
     Contact,
-    Conversation
+    Conversation,
+    ChangePassword
 }
 
